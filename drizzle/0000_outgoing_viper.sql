@@ -12,11 +12,11 @@ CREATE TABLE `session` (
 --> statement-breakpoint
 CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
-	`first_name` text NOT NULL,
-	`other_names` text NOT NULL,
-	`last_name` text NOT NULL,
+	`username` text NOT NULL,
+	`hospital_name` text NOT NULL,
 	`email` text NOT NULL,
-	`has_done_reset_password` integer,
+	`address` text NOT NULL,
+	`phoneNumber` text NOT NULL,
 	`hashed_password` text NOT NULL,
 	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` integer NOT NULL

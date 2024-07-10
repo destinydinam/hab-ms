@@ -19,6 +19,9 @@ const config = {
     },
     extend: {
       colors: {
+        // ========= CUSTOM =========
+        custom: { primary: "#9b045c" },
+        // ========= CUSTOM =========
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -74,7 +77,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), "prettier-plugin-tailwindcss"],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
 export default config;

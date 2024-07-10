@@ -21,6 +21,7 @@ import { CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
 import { sendPasswordResetLink } from "../actions";
+import { Loader2Icon } from "lucide-react";
 
 type Props = {};
 
@@ -66,8 +67,8 @@ const ResetPassword = ({}: Props) => {
           />
           <br />
           {isLoading ? (
-            <Skeleton className="flex h-11 w-full items-center justify-center border border-gray-400 bg-gray-300">
-              <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-green-700" />
+            <Skeleton className="flex h-9 w-full items-center justify-center border border-gray-400 bg-gray-300">
+              <Loader2Icon className="animate-spin" />
             </Skeleton>
           ) : (
             <Button type="submit" className="w-full">

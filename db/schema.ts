@@ -7,11 +7,11 @@ import { db } from ".";
 
 export const usersTable = sqliteTable("users", {
   id: text("id").notNull().primaryKey(),
-  firstName: text("first_name").notNull(),
-  otherNames: text("other_names").notNull(),
-  lastName: text("last_name").notNull(),
+  username: text("username").notNull(),
+  hospitalName: text("hospital_name").notNull(),
   email: text("email").unique().notNull(),
-  hasDoneResetPassword: integer("has_done_reset_password", { mode: "boolean" }),
+  address: text("address").notNull(),
+  phoneNumber: text("phoneNumber").notNull(),
   hashedPassword: text("hashed_password").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`CURRENT_TIMESTAMP`)
@@ -35,22 +35,30 @@ export const adapter = new DrizzleSQLiteAdapter(db, sessionTable, usersTable);
 
 // =============  MAIN SCHEMA  =============
 
-// export const surveyTable = sqliteTable("survery", {
-//   id: integer("id").notNull().primaryKey({ autoIncrement: true }),
-//   userId: text("user_id").notNull(),
-//   class: text("class").notNull(),
-//   do_you_approve_the_adoption_of_the_constitution: text(
-//     "do_you_approve_the_adoption_of_the_constitution"
-//   ).notNull(),
-//   objection: text("objection"),
-//   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-//   createdAt: integer("created_at", { mode: "timestamp" })
-//     .default(sql`CURRENT_TIMESTAMP`)
-//     .notNull(),
-// });
+export const doctorsTable = sqliteTable("doctors", {
+  id: text("id").notNull().primaryKey(),
+  hospitalId: text("hospital_id").notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  otherNames: text("other_names").notNull(),
+  dateOfBirth: text("date_of_birth").notNull(),
+  email: text("email").unique().notNull(),
+  phoneNumber: text("phone_number").notNull(),
+  hireDate: text("hire_date").notNull(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date"),
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
+  doctorType: text("doctor_type").notNull(),
+  status: text("status", { enum: ["active", "inactive"] }),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
 
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
 
-// export type InsertSurvey = typeof surveyTable.$inferInsert;
-// export type SelectSurvey = typeof surveyTable.$inferSelect;
+export type InsertDoctor = typeof doctorsTable.$inferInsert;
+export type SelectDoctor = typeof doctorsTable.$inferSelect;

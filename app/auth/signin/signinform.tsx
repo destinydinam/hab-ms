@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import { signIn } from "../actions";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { urls } from "@/lib/utils";
 
@@ -126,12 +126,12 @@ const SigninForm = () => {
             <br />
 
             {isLoading ? (
-              <Skeleton className="flex h-11 w-full items-center justify-center border border-gray-400 bg-gray-300">
-                <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-green-700" />
+              <Skeleton className="flex h-9 w-full items-center justify-center border border-gray-400 bg-gray-300">
+                <Loader2Icon className="animate-spin" />
               </Skeleton>
             ) : (
               <Button size="sm" type="submit" className="w-full">
-                Continue
+                Sign In
               </Button>
             )}
           </CardContent>

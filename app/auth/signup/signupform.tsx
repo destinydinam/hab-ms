@@ -14,13 +14,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2Icon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { SignupSchema } from "@/app/zodSchema";
 import { CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { signUp } from "../actions";
+import { urls } from "@/lib/utils";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 const SignupForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +40,7 @@ const SignupForm = () => {
       const res = await signUp(values);
       if (res.success) {
         toast.success(res.message);
-        router.push("/");
+        router.push(urls.admin.doctors);
       } else toast.error(res.message);
     } catch (error) {
       toast.error("Something went wrong!");
@@ -51,42 +53,61 @@ const SignupForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <CardContent className="space-y-5">
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Abigail Ama Attah" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Abigail Ama Attah" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
           <FormField
             control={form.control}
-            name="otherNames"
+            name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Other Names</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="Abigail Ama Attah" {...field} />
+                  <Input placeholder="eg: Hospital Admin" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="hospitalName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hospital Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="eg: Dr. Agawal Eye Clinic" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="eg: Tesano, Greater Accra" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold">Phone Number</FormLabel>
+                <FormControl>
+                  <PhoneInput
+                    international
+                    countryCallingCodeEditable={false}
+                    placeholder="200000000"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +121,11 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Email address" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="eg: admin@example.com"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,8 +187,8 @@ const SignupForm = () => {
           <br />
 
           {isLoading ? (
-            <Skeleton className="flex h-11 w-full items-center justify-center border border-gray-400 bg-gray-300">
-              <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-green-700" />
+            <Skeleton className="flex h-9 w-full items-center justify-center border border-gray-400 bg-gray-300">
+              <Loader2Icon className="animate-spin" />
             </Skeleton>
           ) : (
             <Button size="sm" type="submit" className="w-full">

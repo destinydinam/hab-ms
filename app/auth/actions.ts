@@ -24,6 +24,7 @@ import { LibsqlError } from "@libsql/client";
 import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import ResetPasswordTemplate from "@/components/emails/reset-password-template";
 import { Resend } from "resend";
+import { urls } from "@/lib/utils";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
 let message = "An error occurred, Please try again later";
@@ -40,9 +41,10 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
 
     const insertValues: InsertUser = {
       id: userId,
-      firstName: values.firstName,
-      lastName: values.lastName,
-      otherNames: values.otherNames || "",
+      username: values.username,
+      hospitalName: values.hospitalName,
+      address: values.address,
+      phoneNumber: values.phoneNumber,
       email: values.email,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -61,6 +63,14 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
       };
 
     await db.insert(usersTable).values(insertValues);
+
+    const session = await lucia.createSession(insertValues.id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    );
 
     return { success: true, message: "Account Created Successfully" };
   } catch (error) {
@@ -110,7 +120,7 @@ export const signIn = async (values: z.infer<typeof SigninSchema>) => {
       sessionCookie.attributes
     );
 
-    return { success: true, message: "Welcome " + existingUser.firstName };
+    return { success: true, message: "Welcome " + existingUser.username };
   } catch (error) {
     return { success: false, message };
   }
@@ -131,7 +141,7 @@ export const signOut = async () => {
     sessionCookie.value,
     sessionCookie.attributes
   );
-  redirect("/auth/signin");
+  redirect(urls.signin);
 };
 
 export const sendPasswordResetLink = async (
@@ -256,7 +266,7 @@ export const resetPassword = async (values: NewResetPasswordValues) => {
 
     await db
       .update(usersTable)
-      .set({ hashedPassword, hasDoneResetPassword: true })
+      .set({ hashedPassword })
       .where(eq(usersTable.id, item.userId));
 
     const session = await lucia.createSession(item.userId, {});
@@ -269,10 +279,20 @@ export const resetPassword = async (values: NewResetPasswordValues) => {
 
     return {
       success: true,
-      message: "Password Changed. Welcome " + user.firstName,
+      message: "Password Changed. Welcome " + user.username,
     };
   } catch (error) {
     console.log("signIn ~ error:", error);
     return { success: false, message };
   }
+};
+
+export const authUser = async () => {
+  const { user } = await validateRequest();
+
+  const [userData] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, user?.id!));
+  return userData || undefined;
 };

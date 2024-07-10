@@ -74,3 +74,9 @@
     @apply bg-background text-foreground text-xs md:text-sm;
   }
 }
+
+.bg-glass {
+  --tw-backdrop-blur: blur(24px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur);
+  backdrop-filter: var(--tw-backdrop-blur);
+}

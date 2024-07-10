@@ -2,20 +2,19 @@ import { z } from "zod";
 
 export const SignupSchema = z
   .object({
-    firstName: z
+    username: z
       .string()
-      .min(2, { message: "Name must be at least 2 chars" })
-      .max(100, { message: "Name must be less than 100 chars" }),
-    lastName: z
+      .min(2, { message: "Must be at least 2 chars" })
+      .max(100, { message: "Must be less than 100 chars" }),
+    hospitalName: z
       .string()
-      .min(2, { message: "Name must be at least 2 chars" })
-      .max(100, { message: "Name must be less than 100 chars" }),
-    otherNames: z
+      .min(3, { message: "Must be at least 3 chars" })
+      .max(100, { message: "Must be less than 100 chars" }),
+    address: z
       .string()
-      .min(2, { message: "Name must be at least 2 chars" })
-      .max(100, { message: "Name must be less than 100 chars" })
-      .optional()
-      .or(z.literal("")),
+      .min(3, { message: "Must be at least 3 chars" })
+      .max(100, { message: "Must be less than 100 chars" }),
+    phoneNumber: z.string(),
     email: z.string().email(),
     password: z
       .string()

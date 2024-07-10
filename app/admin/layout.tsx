@@ -1,8 +1,9 @@
-import { validateRequest } from "@/auth";
 import { appName, urls } from "@/lib/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import Navbar from "./navbar";
+import { authUser } from "../auth/actions";
 
 export const metadata: Metadata = {
   title: "Hospital - " + appName,
@@ -12,10 +13,15 @@ export const metadata: Metadata = {
 type Props = { children: ReactNode };
 
 const Layout = async (props: Props) => {
-  const { user } = await validateRequest();
+  const user = await authUser();
   if (!user) return redirect(urls.signin);
 
-  return <div>Layout</div>;
+  return (
+    <div>
+      <Navbar hospitalName={user.hospitalName} />
+      {props.children}
+    </div>
+  );
 };
 
 export default Layout;

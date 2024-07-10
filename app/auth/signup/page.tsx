@@ -1,6 +1,3 @@
-import { validateRequest } from "@/auth";
-import { redirect } from "next/navigation";
-
 import {
   CardTitle,
   CardDescription,
@@ -10,13 +7,8 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import SignupForm from "./signupform";
-import { urls } from "@/lib/utils";
 
 const SignupPage = async () => {
-  const { user } = await validateRequest();
-
-  if (user) return redirect(urls.admin);
-
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
