@@ -7,6 +7,7 @@ import { InsertDoctor, doctorsTable } from "@/db/schema";
 import { db } from "@/db";
 import { eq, or } from "drizzle-orm";
 import { authUser } from "@/app/auth/actions";
+import { validateRequest } from "@/auth";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
 let message = "An error occurred, Please try again later";
@@ -18,12 +19,14 @@ export const createDoctor = async (values: z.infer<typeof AddDoctorSchema>) => {
     return { success: false, message: invalidInputMsg };
 
   try {
-    const user = await authUser();
+    const { user } = await validateRequest();
+
+    const userData = await authUser(user?.id!);
 
     const insertValues: InsertDoctor = {
       id: generateId(15),
       ...validatedFields.data,
-      hospitalId: user.id,
+      hospitalId: userData.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

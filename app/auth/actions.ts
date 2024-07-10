@@ -287,12 +287,10 @@ export const resetPassword = async (values: NewResetPasswordValues) => {
   }
 };
 
-export const authUser = async () => {
-  const { user } = await validateRequest();
-
+export const authUser = async (id: string) => {
   const [userData] = await db
     .select()
     .from(usersTable)
-    .where(eq(usersTable.id, user?.id!));
+    .where(eq(usersTable.id, id));
   return userData || undefined;
 };
