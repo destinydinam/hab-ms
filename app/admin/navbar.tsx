@@ -29,6 +29,7 @@ const Navbar = (props: Props) => {
             src="/logo.png"
             width={1000}
             height={1000}
+            priority
             className="w-16"
           />
 

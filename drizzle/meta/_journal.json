@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1720559095991,
-      "tag": "0000_outgoing_viper",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1720571626587,
-      "tag": "0001_pretty_shinko_yamashiro",
+      "when": 1720609198071,
+      "tag": "0000_lively_agent_brand",
       "breakpoints": true
     }
   ]

@@ -40,7 +40,7 @@ export const doctorsTable = sqliteTable("doctors", {
   hospitalId: text("hospital_id").notNull(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
-  otherNames: text("other_names").notNull(),
+  otherNames: text("other_names").default(""),
   dateOfBirth: text("date_of_birth").notNull(),
   email: text("email").unique().notNull(),
   phoneNumber: text("phone_number").notNull(),

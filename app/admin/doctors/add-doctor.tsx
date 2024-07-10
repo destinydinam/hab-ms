@@ -13,17 +13,38 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CirclePlus } from "lucide-react";
+import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AddDoctorSchema } from "./zod-schema";
 import { PhoneInput } from "@/components/ui/phone-input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import ModalButtons from "@/components/ui/modal-buttons";
+import { createDoctor } from "./actions";
 
-type Props = {};
-
-const AddDoctor = (props: Props) => {
+const AddDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof AddDoctorSchema>>({
@@ -33,16 +54,25 @@ const AddDoctor = (props: Props) => {
   const onSubmit = async (values: z.infer<typeof AddDoctorSchema>) => {
     setIsLoading(true);
     try {
-      const res = await { message: "", success: true };
+      const res = await createDoctor(values);
       if (res.success) {
-        if (res.message) {
-          toast.success(
-            "We sent you a password reset email. Please check your mail."
-          );
+        toast.success(res.message);
 
-          form.reset({ email: "" });
-        } else {
-        }
+        form.reset({
+          email: "",
+          dateOfBirth: "",
+          doctorType: "",
+          endDate: "",
+          endTime: "",
+          firstName: "",
+          hireDate: "",
+          lastName: "",
+          otherNames: "",
+          phoneNumber: "",
+          startDate: "",
+          startTime: "",
+          status: "active",
+        });
       } else toast.error(res.message);
     } catch (error) {
       toast.error("Something went wrong!");
@@ -62,18 +92,18 @@ const AddDoctor = (props: Props) => {
           <CirclePlus className="w-4 h-4" /> Add Doctor
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[1000px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[900px] md:px-10 max-h-[90vh] overflow-y-auto">
         <h3 className="font-semibold text-2xl">Add Doctor</h3>
-        <p className="mt-4 text-gray-400 text-xs">
+        <p className="mt-3 text-gray-400 text-xs">
           enter doctor details and click save
         </p>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-8"
+            className="space-y-4 mt-6"
           >
-            <h2 className="font-semibold text-xl">Personal Details</h2>
+            <h2 className="font-semibold text-lg">Personal Details</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <FormField
@@ -169,16 +199,174 @@ const AddDoctor = (props: Props) => {
             </div>
 
             <br />
+            <br />
+            <h2 className="font-semibold text-lg">Work Details</h2>
 
-            {isLoading ? (
-              <Skeleton className="flex h-11 w-full items-center justify-center border border-gray-400 bg-gray-300">
-                <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-green-700" />
-              </Skeleton>
-            ) : (
-              <Button type="submit" className="w-full">
-                Continue
-              </Button>
-            )}
+            <div className="grid grid-cols-1 items-end md:grid-cols-3 gap-6">
+              <FormField
+                control={form.control}
+                name="hireDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hire Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Start Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>End Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div>
+                <p className="font-semibold ">Working Hours</p>
+                <br />
+                <FormField
+                  control={form.control}
+                  name="startTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start Time</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="endTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>End Time</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="doctorType"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Doctor Type</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value
+                              ? doctorTypes.find(
+                                  (doctorType) => doctorType === field?.value
+                                )
+                              : "Select doctor type"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search doctor type..." />
+                          <CommandList>
+                            <CommandEmpty>No doctor type found.</CommandEmpty>
+                            <CommandGroup heading="Doctors">
+                              {doctorTypes.map((doctorType, i) => (
+                                <CommandItem
+                                  value={doctorType}
+                                  key={i}
+                                  onSelect={() => {
+                                    form.setValue("doctorType", doctorType);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      doctorType === field?.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {doctorType}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="active">active</SelectItem>
+                        <SelectItem value="inactive">inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <br />
+
+            <ModalButtons isLoading={isLoading} />
           </form>
         </Form>
       </DialogContent>
@@ -187,3 +375,31 @@ const AddDoctor = (props: Props) => {
 };
 
 export default AddDoctor;
+
+export const doctorTypes = [
+  "Others",
+  "Anesthesiologist",
+  "Cardiologist",
+  "Dermatologist",
+  "Endocrinologist",
+  "Gastroenterologist",
+  "General Practitioner (GP)",
+  "Gynecologist",
+  "Hematologist",
+  "Infectious Disease Specialist",
+  "Internist",
+  "Nephrologist",
+  "Neurologist",
+  "Obstetrician",
+  "Oncologist",
+  "Ophthalmologist",
+  "Orthopedic Surgeon",
+  "Otolaryngologist (ENT)",
+  "Pediatrician",
+  "Psychiatrist",
+  "Pulmonologist",
+  "Radiologist",
+  "Rheumatologist",
+  "Surgeon",
+  "Urologist",
+];
