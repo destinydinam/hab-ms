@@ -2,6 +2,7 @@ import { max, min } from "@/lib/utils";
 import { z } from "zod";
 
 export const AddDoctorSchema = z.object({
+  title: z.string(),
   firstName: z.string().min(2, min(2)).max(100, max(100)),
   lastName: z.string().min(2, min(2)).max(100, max(100)),
   otherNames: z

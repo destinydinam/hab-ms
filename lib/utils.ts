@@ -1,3 +1,4 @@
+import { SelectDoctor } from "@/db/schema";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -21,3 +22,21 @@ export const min = (length: number) => ({
 export const max = (length: number) => ({
   message: `Must be less than ${length} chars`,
 });
+
+export function convertToAmPm(time: string): string {
+  const [hourStr, minute] = time.split(":");
+  let hour = parseInt(hourStr);
+
+  const amPm = hour >= 12 ? "PM" : "AM";
+
+  if (hour === 0) hour = 12;
+  else if (hour > 12) hour -= 12;
+
+  const hourFormatted = hour.toString().padStart(2, "0");
+  const minuteFormatted = minute.padStart(2, "0");
+
+  return `${hourFormatted}:${minuteFormatted} ${amPm}`;
+}
+
+export const getDoctorName = (doctor: SelectDoctor) =>
+  `${doctor.title || "Dr."} ${doctor.firstName} ${doctor.otherNames ? doctor.otherNames + " " : ""}${doctor.lastName}`;

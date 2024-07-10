@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "37cc5e1e-e4e2-4c34-ad95-ae2a5ea410c0",
+  "id": "f5fbf0a0-48dc-42d8-bfbe-0c0a48a15edf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "doctors": {
@@ -20,6 +20,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Dr'"
         },
         "first_name": {
           "name": "first_name",
@@ -108,6 +116,13 @@
         },
         "status": {
           "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "image": {
+          "name": "image",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

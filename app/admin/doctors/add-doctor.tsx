@@ -46,6 +46,9 @@ import { createDoctor } from "./actions";
 
 const AddDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const closeDialog = () => setOpen(false);
 
   const form = useForm<z.infer<typeof AddDoctorSchema>>({
     resolver: zodResolver(AddDoctorSchema),
@@ -73,6 +76,7 @@ const AddDoctor = () => {
           startTime: "",
           status: "active",
         });
+        closeDialog();
       } else toast.error(res.message);
     } catch (error) {
       toast.error("Something went wrong!");
@@ -82,12 +86,13 @@ const AddDoctor = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           size="sm"
           variant="outline"
-          className="border border-gray-400 hover:bg-black hover:text-white font-medium hover:shadow-xl transition-all duration-300 ease-in-out rounded-md text-xs px-4 gap-3"
+          disabled={isLoading}
+          className="border w-full gap-5 justify-start border-gray-400 hover:bg-black hover:text-white font-medium hover:shadow-xl transition-all duration-300 ease-in-out rounded-md text-xs px-4 md:gap-3"
         >
           <CirclePlus className="w-4 h-4" /> Add Doctor
         </Button>
@@ -106,6 +111,19 @@ const AddDoctor = () => {
             <h2 className="font-semibold text-lg">Personal Details</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Dr" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="firstName"

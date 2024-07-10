@@ -38,6 +38,7 @@ export const adapter = new DrizzleSQLiteAdapter(db, sessionTable, usersTable);
 export const doctorsTable = sqliteTable("doctors", {
   id: text("id").notNull().primaryKey(),
   hospitalId: text("hospital_id").notNull(),
+  title: text("title").default("Dr").notNull(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   otherNames: text("other_names").default(""),
@@ -51,6 +52,7 @@ export const doctorsTable = sqliteTable("doctors", {
   endTime: text("end_time").notNull(),
   doctorType: text("doctor_type").notNull(),
   status: text("status", { enum: ["active", "inactive"] }),
+  image: text("image"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

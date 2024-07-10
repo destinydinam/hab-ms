@@ -1,6 +1,7 @@
 CREATE TABLE `doctors` (
 	`id` text PRIMARY KEY NOT NULL,
 	`hospital_id` text NOT NULL,
+	`title` text DEFAULT 'Dr' NOT NULL,
 	`first_name` text NOT NULL,
 	`last_name` text NOT NULL,
 	`other_names` text DEFAULT '',
@@ -14,6 +15,7 @@ CREATE TABLE `doctors` (
 	`end_time` text NOT NULL,
 	`doctor_type` text NOT NULL,
 	`status` text,
+	`image` text,
 	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` integer NOT NULL
 );
