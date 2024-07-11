@@ -40,3 +40,23 @@ export function convertToAmPm(time: string): string {
 
 export const getDoctorName = (doctor: SelectDoctor) =>
   `${doctor.title || "Dr"}. ${doctor.firstName} ${doctor.otherNames ? doctor.otherNames + " " : ""}${doctor.lastName}`;
+
+export const getHours = (startTime: string, endTime: string) => {
+  const convertToMinutes = (time: string): number => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
+  const startMinutes = convertToMinutes(startTime);
+  const endMinutes = convertToMinutes(endTime);
+
+  let differenceInMinutes = endMinutes - startMinutes;
+
+  if (differenceInMinutes < 0) {
+    differenceInMinutes += 24 * 60;
+  }
+
+  const differenceInHours = differenceInMinutes / 60;
+
+  return differenceInHours;
+};

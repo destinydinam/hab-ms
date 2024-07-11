@@ -25,7 +25,7 @@ const ModalButtons = (props: Props) => {
             variant="outline"
             type="submit"
             onClick={props?.onClick}
-            className="bg-green-500 border hover:border-green-500 hover:bg-green-100"
+            className="bg-green-500 px-6 border hover:border-green-500 hover:bg-green-100"
           >
             Save
           </Button>
