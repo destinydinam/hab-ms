@@ -24,7 +24,7 @@ const DoctorLayout = async ({ params, children }: Props) => {
   return (
     <div className="px-4">
       <div className="my-10 flex justify-between gap-3">
-        <h2 className="font-semibold text-xl md:text-2xl">
+        <h2 className="font-semibold flex items-center text-xl md:text-2xl">
           {getDoctorName(doctor)}
           <Badge
             variant="outline"
