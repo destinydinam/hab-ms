@@ -39,4 +39,4 @@ export function convertToAmPm(time: string): string {
 }
 
 export const getDoctorName = (doctor: SelectDoctor) =>
-  `${doctor.title || "Dr."} ${doctor.firstName} ${doctor.otherNames ? doctor.otherNames + " " : ""}${doctor.lastName}`;
+  `${doctor.title || "Dr"}. ${doctor.firstName} ${doctor.otherNames ? doctor.otherNames + " " : ""}${doctor.lastName}`;

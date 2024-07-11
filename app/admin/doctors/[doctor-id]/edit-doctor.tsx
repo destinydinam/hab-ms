@@ -11,14 +11,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
+import { Check, ChevronsUpDown, Pencil } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { AddDoctorSchema } from "./zod-schema";
 import { PhoneInput } from "@/components/ui/phone-input";
 import {
   Popover,
@@ -42,9 +40,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ModalButtons from "@/components/ui/modal-buttons";
-import { createDoctor } from "./actions";
+import { AddDoctorSchema } from "../zod-schema";
+import { editDoctor } from "../actions";
+import { SelectDoctor } from "@/db/schema";
 
-const AddDoctor = () => {
+const EditDoctor = ({ doctor }: { doctor: SelectDoctor }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -52,12 +52,28 @@ const AddDoctor = () => {
 
   const form = useForm<z.infer<typeof AddDoctorSchema>>({
     resolver: zodResolver(AddDoctorSchema),
+    defaultValues: {
+      dateOfBirth: doctor.dateOfBirth,
+      email: doctor.email,
+      endDate: doctor.endDate || "",
+      endTime: doctor.endTime,
+      doctorType: doctor.doctorType,
+      firstName: doctor.firstName,
+      hireDate: doctor.hireDate,
+      lastName: doctor.lastName,
+      otherNames: doctor.otherNames || "",
+      phoneNumber: doctor.phoneNumber,
+      startDate: doctor.startDate,
+      startTime: doctor.startTime,
+      status: doctor.status || undefined,
+      title: doctor.title,
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof AddDoctorSchema>) => {
     setIsLoading(true);
     try {
-      const res = await createDoctor(values);
+      const res = await editDoctor({ doctor, values });
       if (res.success) {
         toast.success(res.message);
 
@@ -92,13 +108,13 @@ const AddDoctor = () => {
           size="sm"
           variant="outline"
           disabled={isLoading}
-          className="border w-full gap-5 justify-start border-gray-400 hover:bg-black hover:text-white font-medium hover:shadow-xl transition-all duration-300 ease-in-out rounded-md text-xs px-4 md:gap-3"
+          className="border gap-4 justify-start border-gray-400 hover:bg-black hover:text-white font-medium hover:shadow-xl transition-all duration-300 ease-in-out rounded-md text-xs px-4 md:gap-3"
         >
-          <CirclePlus className="w-4 h-4" /> Add Doctor
+          <Pencil className="w-4 h-4" /> Edit Doctor
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[900px] md:px-10 max-h-[90vh] overflow-y-auto">
-        <h3 className="font-semibold text-2xl">Add Doctor</h3>
+        <h3 className="font-semibold text-2xl">Edit Doctor</h3>
         <p className="mt-3 text-gray-400 text-xs">
           enter doctor details and click save
         </p>
@@ -392,7 +408,7 @@ const AddDoctor = () => {
   );
 };
 
-export default AddDoctor;
+export default EditDoctor;
 
 export const doctorTypes = [
   "Others",
