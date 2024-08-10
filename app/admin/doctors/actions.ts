@@ -112,3 +112,17 @@ export const editDoctor = async ({ doctor, values }: EditDoctorValues) => {
     return { success: false, message };
   }
 };
+
+export const getWeeklyAvailabilities = async (doctorId: string) => {
+  try {
+    const weeklyAvailabilities = await db
+      .select()
+      .from(weeklyAvailabilitiesTable)
+      .where(eq(weeklyAvailabilitiesTable.doctorId, doctorId));
+
+    return { success: true, data: weeklyAvailabilities };
+  } catch (error) {
+    console.log("getWeeklyAvailabilities ~ error:", error);
+    return { success: false, message };
+  }
+};
