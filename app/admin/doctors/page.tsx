@@ -59,15 +59,6 @@ export default DoctorsPage;
 const DoctorsList = ({ doctors }: { doctors: SelectDoctor[] }) => {
   return doctors?.length ? (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-      {/* {[
-        ...doctors,
-        ...doctors,
-        ...doctors,
-        ...doctors,
-        ...doctors,
-        ...doctors,
-        ...doctors,
-      ].map((doctor, i) => ( */}
       {doctors.map((doctor, i) => (
         <Link key={i} href={urls.admin.doctors + "/" + doctor.id}>
           <Card className="py-4 border-gray-300 hover:border-gray-400 hover:shadow transition-all duration-300 ease-in-out">

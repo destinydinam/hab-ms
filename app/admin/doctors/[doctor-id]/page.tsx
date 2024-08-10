@@ -16,14 +16,14 @@ const DoctorDetailsPage = async ({ params }: Props) => {
     .where(eq(doctorsTable.id, params["doctor-id"]));
 
   return (
-    <div className="bg-gray-300 p-4 rounded-md mb-4">
-      <br />
+    <div className="bg-gray-300 p-4 md:px-8 rounded-md mb-4">
       <div className="flex justify-end w-full">
         <EditDoctor doctor={doctor} />
       </div>
+
       <br />
-      <br />
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         <div className="col-span-1 md:col-span-5 bg-white px-4 py-10 rounded-md">
           <Image
             src={doctor.image || "/placeholder.png"}

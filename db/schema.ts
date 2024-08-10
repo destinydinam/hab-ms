@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { db } from ".";
+import { days } from "@/lib/utils";
 
 // ===========  USER + AUTH  =============
 
@@ -59,8 +60,35 @@ export const doctorsTable = sqliteTable("doctors", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
+export const weeklyAvailabilitiesTable = sqliteTable("weekly_availabilities", {
+  id: text("id").notNull().primaryKey(),
+  doctorId: text("doctor_id").notNull(),
+  day: text("day", {
+    enum: [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ],
+  }).notNull(),
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
 
 export type InsertDoctor = typeof doctorsTable.$inferInsert;
 export type SelectDoctor = typeof doctorsTable.$inferSelect;
+
+export type InsertWeeklyAvailabilities =
+  typeof weeklyAvailabilitiesTable.$inferInsert;
+export type SelectWeeklyAvailabilities =
+  typeof weeklyAvailabilitiesTable.$inferSelect;

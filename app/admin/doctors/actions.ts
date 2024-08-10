@@ -3,13 +3,19 @@
 import { z } from "zod";
 import { AddDoctorSchema } from "./zod-schema";
 import { generateId } from "lucia";
-import { InsertDoctor, SelectDoctor, doctorsTable } from "@/db/schema";
+import {
+  InsertDoctor,
+  InsertWeeklyAvailabilities,
+  SelectDoctor,
+  doctorsTable,
+  weeklyAvailabilitiesTable,
+} from "@/db/schema";
 import { db } from "@/db";
 import { eq, or } from "drizzle-orm";
 import { authUser } from "@/app/auth/actions";
 import { validateRequest } from "@/auth";
 import { revalidatePath } from "next/cache";
-import { urls } from "@/lib/utils";
+import { days, urls } from "@/lib/utils";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
 let message = "An error occurred, Please try again later";
@@ -50,6 +56,21 @@ export const createDoctor = async (values: z.infer<typeof AddDoctorSchema>) => {
       };
 
     await db.insert(doctorsTable).values(insertValues);
+
+    const weeklyAvailabilitiesInsertValues: InsertWeeklyAvailabilities[] =
+      days.map((day) => ({
+        id: generateId(15),
+        doctorId: insertValues.id,
+        day,
+        startTime: insertValues.startTime,
+        endTime: insertValues.endTime,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+
+    await db
+      .insert(weeklyAvailabilitiesTable)
+      .values(weeklyAvailabilitiesInsertValues);
 
     revalidatePath(urls.admin.doctors);
 

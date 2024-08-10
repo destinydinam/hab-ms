@@ -1,4 +1,5 @@
 import { SelectDoctor } from "@/db/schema";
+import { Days } from "@/types/type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -60,3 +61,13 @@ export const getHours = (startTime: string, endTime: string) => {
 
   return differenceInHours;
 };
+
+export const days: Days[] = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
