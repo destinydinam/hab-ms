@@ -1,13 +1,19 @@
 "use server";
 
 import { z } from "zod";
-import { AddDoctorSchema } from "./zod-schema";
+import {
+  AddDoctorSchema,
+  AddOverrideSchema,
+  EditAvailabilitySchema,
+} from "./zod-schema";
 import { generateId } from "lucia";
 import {
   InsertDoctor,
+  InsertOverride,
   InsertWeeklyAvailabilities,
   SelectDoctor,
   doctorsTable,
+  overridesTable,
   weeklyAvailabilitiesTable,
 } from "@/db/schema";
 import { db } from "@/db";
@@ -123,6 +129,82 @@ export const getWeeklyAvailabilities = async (doctorId: string) => {
     return { success: true, data: weeklyAvailabilities };
   } catch (error) {
     console.log("getWeeklyAvailabilities ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const editWeeklyAvailability = async (
+  values: z.infer<typeof EditAvailabilitySchema>
+) => {
+  const validatedFields = EditAvailabilitySchema.safeParse(values);
+
+  if (!validatedFields.success)
+    return { success: false, message: invalidInputMsg };
+
+  try {
+    await db
+      .update(weeklyAvailabilitiesTable)
+      .set(validatedFields.data)
+      .where(eq(weeklyAvailabilitiesTable.id, validatedFields.data.id));
+
+    return { success: true, message: "Availability edited Successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+export const deleteWeeklyAvailability = async (doctorId: string) => {
+  try {
+    await db
+      .delete(weeklyAvailabilitiesTable)
+      .where(eq(weeklyAvailabilitiesTable.doctorId, doctorId));
+
+    return { success: true, message: "Availability deleted successfully" };
+  } catch (error) {
+    console.log("deleteWeeklyAvailability ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const createOverride = async (
+  values: z.infer<typeof AddOverrideSchema>
+) => {
+  const validatedFields = AddOverrideSchema.safeParse(values);
+
+  if (!validatedFields.success)
+    return { success: false, message: invalidInputMsg };
+
+  try {
+    const insertValues: InsertOverride = {
+      id: generateId(15),
+      ...validatedFields.data,
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    // do a check to make sure there are no overlapping overrides
+
+    await db.insert(overridesTable).values(insertValues);
+
+    return { success: true, message: "Override added Successfully" };
+  } catch (error) {
+    console.log("createUser ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getOverrides = async (doctorId: string) => {
+  try {
+    const overrides = await db
+      .select()
+      .from(overridesTable)
+      .where(eq(overridesTable.doctorId, doctorId));
+
+    return { success: true, data: overrides };
+  } catch (error) {
+    console.log("getOverrides ~ error:", error);
     return { success: false, message };
   }
 };

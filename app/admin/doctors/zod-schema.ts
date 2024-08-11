@@ -22,3 +22,18 @@ export const AddDoctorSchema = z.object({
   doctorType: z.string().min(2, min(2)).max(100, max(100)),
   status: z.enum(["active", "inactive"]),
 });
+
+export const EditAvailabilitySchema = z.object({
+  id: z.string(),
+  startTime: z.string(),
+  endTime: z.string(),
+});
+
+export const AddOverrideSchema = z.object({
+  doctorId: z.string().min(1, { message: "DoctorId Required" }),
+  startDate: z.string().min(1, { message: "Start Date Required" }),
+  startTime: z.string().min(1, { message: "Start Time Required" }),
+  endDate: z.string().min(1, { message: "End Date Required" }),
+  endTime: z.string().min(1, { message: "End Time Required" }),
+  reason: z.string().optional().or(z.literal("")),
+});

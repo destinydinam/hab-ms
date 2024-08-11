@@ -83,4 +83,8 @@
   .hide-ring {
     @apply focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0;
   }
+
+  .border-gray {
+    @apply border border-gray-300;
+  }
 }

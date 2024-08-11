@@ -15,6 +15,13 @@
       "when": 1723307025539,
       "tag": "0001_quiet_stark_industries",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1723376439568,
+      "tag": "0002_quiet_eternity",
+      "breakpoints": true
     }
   ]
 }

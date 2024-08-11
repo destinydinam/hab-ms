@@ -2,7 +2,6 @@ import { sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { db } from ".";
-import { days } from "@/lib/utils";
 
 // ===========  USER + AUTH  =============
 
@@ -82,6 +81,20 @@ export const weeklyAvailabilitiesTable = sqliteTable("weekly_availabilities", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
+export const overridesTable = sqliteTable("overrides", {
+  id: text("id").notNull().primaryKey(),
+  doctorId: text("doctor_id").notNull(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date").notNull(),
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
+  reason: text("reason"),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
 
@@ -92,3 +105,6 @@ export type InsertWeeklyAvailabilities =
   typeof weeklyAvailabilitiesTable.$inferInsert;
 export type SelectWeeklyAvailabilities =
   typeof weeklyAvailabilitiesTable.$inferSelect;
+
+export type InsertOverride = typeof overridesTable.$inferInsert;
+export type SelectOverride = typeof overridesTable.$inferSelect;
