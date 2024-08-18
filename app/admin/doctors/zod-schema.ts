@@ -37,3 +37,21 @@ export const AddOverrideSchema = z.object({
   endTime: z.string().min(1, { message: "End Time Required" }),
   reason: z.string().optional().or(z.literal("")),
 });
+
+export const AddCertificationSchema = z.object({
+  doctorId: z.string().min(1, { message: "DoctorId Required" }),
+  certificationName: z
+    .string()
+    .min(1, { message: "Certification Name Required" }),
+  dateIssued: z.string().min(1, { message: "Date Issued Required" }),
+  expiryDate: z.string().optional().or(z.literal("")),
+  certificateFile: z.string().optional().or(z.literal("")),
+});
+
+export const AddWorkExperienceSchema = z.object({
+  doctorId: z.string().min(1, { message: "DoctorId Required" }),
+  companyName: z.string().min(1, { message: "Company Name Required" }),
+  jobTitle: z.string().min(1, { message: "Job Title Required" }),
+  startDate: z.string().optional().or(z.literal("")),
+  endDate: z.string().optional().or(z.literal("")),
+});

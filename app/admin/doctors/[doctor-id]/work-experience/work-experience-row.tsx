@@ -5,27 +5,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { SelectOverride } from "@/db/schema";
-import { convertToAmPm } from "@/lib/utils";
+import { SelectWorkExperience } from "@/db/schema";
 import { MoreHorizontal } from "lucide-react";
-import DeleteOverride from "./delete-override";
-import ViewMore from "./view-more ";
+import EditWorkExperience from "./edit-work-experience";
+import DeleteWorkExperience from "./delete-work-experience";
 
-type Props = { override: SelectOverride; index: number };
+type Props = { index: number; workExperience: SelectWorkExperience };
 
-const OverrideRow = ({ override, index }: Props) => {
+const WorkExperienceRow = ({ workExperience, index }: Props) => {
   return (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{override.startDate}</TableCell>
-      <TableCell>
-        {!override.startTime || convertToAmPm(override.startTime)}
-      </TableCell>
-      <TableCell>{override.endDate}</TableCell>
-      <TableCell>
-        {!override.endTime || convertToAmPm(override.endTime)}
-      </TableCell>
-      <TableCell>{override.reason}</TableCell>
+      <TableCell>{workExperience.companyName}</TableCell>
+      <TableCell>{workExperience.jobTitle}</TableCell>
+      <TableCell>{workExperience.startDate}</TableCell>
+      <TableCell>{workExperience.endDate}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -35,8 +29,8 @@ const OverrideRow = ({ override, index }: Props) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <ViewMore override={override} />
-            <DeleteOverride override={override} />
+            <EditWorkExperience workExperience={workExperience} />
+            <DeleteWorkExperience workExperience={workExperience} />
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>
@@ -44,4 +38,4 @@ const OverrideRow = ({ override, index }: Props) => {
   );
 };
 
-export default OverrideRow;
+export default WorkExperienceRow;

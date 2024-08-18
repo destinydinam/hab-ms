@@ -71,3 +71,25 @@ export const days: Days[] = [
   "saturday",
   "sunday",
 ];
+
+export const queryKeys = {
+  overrides: "overrides",
+  "work-experience": "work-experience",
+  certifications: "certifications",
+  "weekly-availabilities": "weekly-availabilities",
+  appointments: "appointments",
+  "appointments-settings": "appointments-settings",
+};
+
+export const durations = [
+  { value: 1, label: "1 minutes" },
+  { value: 3, label: "3 minutes" },
+  { value: 5, label: "5 minutes" },
+  { value: 10, label: "10 minutes" },
+  { value: 15, label: "15 minutes" },
+  { value: 20, label: "20 minutes" },
+  { value: 25, label: "25 minutes" },
+  { value: 30, label: "30 minutes" },
+];
+
+export const noYes = ["no", "yes"];

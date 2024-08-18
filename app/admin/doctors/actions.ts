@@ -2,22 +2,30 @@
 
 import { z } from "zod";
 import {
+  AddCertificationSchema,
   AddDoctorSchema,
   AddOverrideSchema,
+  AddWorkExperienceSchema,
   EditAvailabilitySchema,
 } from "./zod-schema";
 import { generateId } from "lucia";
 import {
+  InsertCertification,
   InsertDoctor,
   InsertOverride,
   InsertWeeklyAvailabilities,
+  InsertWorkExperience,
+  SelectCertification,
   SelectDoctor,
+  SelectWorkExperience,
+  certificationsTable,
   doctorsTable,
   overridesTable,
   weeklyAvailabilitiesTable,
+  workExperienceTable,
 } from "@/db/schema";
 import { db } from "@/db";
-import { eq, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { authUser } from "@/app/auth/actions";
 import { validateRequest } from "@/auth";
 import { revalidatePath } from "next/cache";
@@ -119,6 +127,8 @@ export const editDoctor = async ({ doctor, values }: EditDoctorValues) => {
   }
 };
 
+// =======================  Weekly Availabilities =======================
+
 export const getWeeklyAvailabilities = async (doctorId: string) => {
   try {
     const weeklyAvailabilities = await db
@@ -167,6 +177,8 @@ export const deleteWeeklyAvailability = async (doctorId: string) => {
   }
 };
 
+// ======================= Override =======================
+
 export const createOverride = async (
   values: z.infer<typeof AddOverrideSchema>
 ) => {
@@ -176,10 +188,14 @@ export const createOverride = async (
     return { success: false, message: invalidInputMsg };
 
   try {
+    const { user } = await validateRequest();
+
+    const userData = await authUser(user?.id!);
+
     const insertValues: InsertOverride = {
       id: generateId(15),
       ...validatedFields.data,
-
+      hospitalId: userData.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -205,6 +221,216 @@ export const getOverrides = async (doctorId: string) => {
     return { success: true, data: overrides };
   } catch (error) {
     console.log("getOverrides ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const deleteOverride = async ({
+  id,
+  doctorId,
+}: {
+  id: string;
+  doctorId: string;
+}) => {
+  try {
+    await db
+      .delete(overridesTable)
+      .where(
+        and(eq(overridesTable.id, id), eq(overridesTable.doctorId, doctorId))
+      );
+
+    return { success: true, message: "Override deleted successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+// ======================= Certification =======================
+
+export const createCertification = async (
+  values: z.infer<typeof AddCertificationSchema>
+) => {
+  const validatedFields = AddCertificationSchema.safeParse(values);
+
+  if (!validatedFields.success)
+    return { success: false, message: invalidInputMsg };
+
+  try {
+    const { user } = await validateRequest();
+
+    const userData = await authUser(user?.id!);
+
+    const insertValues: InsertCertification = {
+      id: generateId(15),
+      hospitalId: userData.id,
+      certificateFile: "",
+      certificationName: validatedFields.data.certificationName,
+      dateIssued: validatedFields.data.dateIssued,
+      doctorId: validatedFields.data.doctorId,
+      expiryDate: validatedFields.data.expiryDate,
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await db.insert(certificationsTable).values(insertValues);
+
+    return { success: true, message: "Certification added Successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+export const editCertification = async (values: SelectCertification) => {
+  const validatedFields = AddCertificationSchema.safeParse(values);
+
+  if (!validatedFields.success)
+    return { success: false, message: invalidInputMsg };
+
+  try {
+    await db
+      .update(certificationsTable)
+      .set(validatedFields.data)
+      .where(eq(certificationsTable.id, values.id));
+
+    return { success: true, message: "Certification edited Successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getCertifications = async (doctorId: string) => {
+  try {
+    const certifications = await db
+      .select()
+      .from(certificationsTable)
+      .where(eq(certificationsTable.doctorId, doctorId));
+
+    return { success: true, data: certifications };
+  } catch (error) {
+    console.log("getCertifications ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const deleteCertification = async ({
+  id,
+  doctorId,
+}: {
+  id: string;
+  doctorId: string;
+}) => {
+  try {
+    await db
+      .delete(certificationsTable)
+      .where(
+        and(
+          eq(certificationsTable.id, id),
+          eq(certificationsTable.doctorId, doctorId)
+        )
+      );
+
+    return { success: true, message: "Certification deleted successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+// ======================= Work Experience =======================
+
+export const createWorkExperience = async (
+  values: z.infer<typeof AddWorkExperienceSchema>
+) => {
+  const validatedFields = AddWorkExperienceSchema.safeParse(values);
+
+  if (!validatedFields.success)
+    return { success: false, message: invalidInputMsg };
+
+  try {
+    const { user } = await validateRequest();
+
+    const userData = await authUser(user?.id!);
+
+    const insertValues: InsertWorkExperience = {
+      id: generateId(15),
+      doctorId: validatedFields.data.doctorId,
+      hospitalId: userData.id,
+
+      companyName: validatedFields.data.companyName,
+      jobTitle: validatedFields.data.jobTitle,
+      startDate: validatedFields.data.startDate,
+      endDate: validatedFields.data.endDate,
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await db.insert(workExperienceTable).values(insertValues);
+
+    return { success: true, message: "Work Experience added Successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+export const editWorkExperience = async (values: SelectWorkExperience) => {
+  const validatedFields = AddWorkExperienceSchema.safeParse(values);
+
+  if (!validatedFields.success)
+    return { success: false, message: invalidInputMsg };
+
+  try {
+    await db
+      .update(workExperienceTable)
+      .set(validatedFields.data)
+      .where(eq(workExperienceTable.id, values.id));
+
+    return { success: true, message: "Work Experience edited Successfully" };
+  } catch (error) {
+    console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getWorkExperience = async (doctorId: string) => {
+  try {
+    const workExperiences = await db
+      .select()
+      .from(workExperienceTable)
+      .where(eq(workExperienceTable.doctorId, doctorId));
+
+    return { success: true, data: workExperiences };
+  } catch (error) {
+    console.log("getWorkExperience ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const deleteWorkExperience = async ({
+  id,
+  doctorId,
+}: {
+  id: string;
+  doctorId: string;
+}) => {
+  try {
+    await db
+      .delete(workExperienceTable)
+      .where(
+        and(
+          eq(workExperienceTable.id, id),
+          eq(workExperienceTable.doctorId, doctorId)
+        )
+      );
+
+    return { success: true, message: "Work Experience deleted successfully" };
+  } catch (error) {
+    console.log("error:", error);
     return { success: false, message };
   }
 };

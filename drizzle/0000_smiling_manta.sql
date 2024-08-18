@@ -20,6 +20,18 @@ CREATE TABLE `doctors` (
 	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE `overrides` (
+	`id` text PRIMARY KEY NOT NULL,
+	`doctor_id` text NOT NULL,
+	`start_date` text NOT NULL,
+	`end_date` text NOT NULL,
+	`start_time` text NOT NULL,
+	`end_time` text NOT NULL,
+	`reason` text,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `password_reset_tokens` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text(21) NOT NULL,
@@ -40,6 +52,16 @@ CREATE TABLE `users` (
 	`address` text NOT NULL,
 	`phoneNumber` text NOT NULL,
 	`hashed_password` text NOT NULL,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `weekly_availabilities` (
+	`id` text PRIMARY KEY NOT NULL,
+	`doctor_id` text NOT NULL,
+	`day` text NOT NULL,
+	`start_time` text NOT NULL,
+	`end_time` text NOT NULL,
 	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` integer NOT NULL
 );

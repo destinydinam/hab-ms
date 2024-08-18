@@ -83,12 +83,60 @@ export const weeklyAvailabilitiesTable = sqliteTable("weekly_availabilities", {
 
 export const overridesTable = sqliteTable("overrides", {
   id: text("id").notNull().primaryKey(),
+  hospitalId: text("hospital_id"),
   doctorId: text("doctor_id").notNull(),
   startDate: text("start_date").notNull(),
   endDate: text("end_date").notNull(),
   startTime: text("start_time").notNull(),
   endTime: text("end_time").notNull(),
   reason: text("reason"),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const certificationsTable = sqliteTable("certifications", {
+  id: text("id").notNull().primaryKey(),
+  doctorId: text("doctor_id").notNull(),
+  hospitalId: text("hospital_id").notNull(),
+
+  certificationName: text("certification_name").notNull(),
+  dateIssued: text("date_issued").notNull(),
+  expiryDate: text("expiry_date"),
+  certificateFile: text("certificate_file"),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const workExperienceTable = sqliteTable("work_experience", {
+  id: text("id").notNull().primaryKey(),
+  doctorId: text("doctor_id").notNull(),
+  hospitalId: text("hospital_id").notNull(),
+
+  companyName: text("company_name").notNull(),
+  jobTitle: text("job_title").notNull(),
+  startDate: text("start_date"),
+  endDate: text("end_date"),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const appointmentSettingsTable = sqliteTable("appointment_settings", {
+  id: text("id").notNull().primaryKey(),
+  hospitalId: text("hospital_id").notNull(),
+
+  duration: text("duration").notNull(),
+  bufferTime: text("bufferTime").notNull(),
+  paymentBeforeBooking: text("payment_before_booking").notNull(),
+  showDoctorName: text("show_doctor_name").notNull(),
+
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -108,3 +156,14 @@ export type SelectWeeklyAvailabilities =
 
 export type InsertOverride = typeof overridesTable.$inferInsert;
 export type SelectOverride = typeof overridesTable.$inferSelect;
+
+export type InsertCertification = typeof certificationsTable.$inferInsert;
+export type SelectCertification = typeof certificationsTable.$inferSelect;
+
+export type InsertWorkExperience = typeof workExperienceTable.$inferInsert;
+export type SelectWorkExperience = typeof workExperienceTable.$inferSelect;
+
+export type InsertAppointmentSettings =
+  typeof appointmentSettingsTable.$inferInsert;
+export type SelectAppointmentSettings =
+  typeof appointmentSettingsTable.$inferSelect;

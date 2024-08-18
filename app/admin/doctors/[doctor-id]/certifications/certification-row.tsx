@@ -5,27 +5,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { SelectOverride } from "@/db/schema";
-import { convertToAmPm } from "@/lib/utils";
+import { SelectCertification } from "@/db/schema";
 import { MoreHorizontal } from "lucide-react";
-import DeleteOverride from "./delete-override";
-import ViewMore from "./view-more ";
+import DeleteCertification from "./delete-certification";
+import EditCertification from "./edit-certification";
 
-type Props = { override: SelectOverride; index: number };
+type Props = { index: number; certification: SelectCertification };
 
-const OverrideRow = ({ override, index }: Props) => {
+const CertificationRow = ({ certification, index }: Props) => {
   return (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{override.startDate}</TableCell>
-      <TableCell>
-        {!override.startTime || convertToAmPm(override.startTime)}
-      </TableCell>
-      <TableCell>{override.endDate}</TableCell>
-      <TableCell>
-        {!override.endTime || convertToAmPm(override.endTime)}
-      </TableCell>
-      <TableCell>{override.reason}</TableCell>
+      <TableCell>{certification.certificationName}</TableCell>
+      <TableCell>{certification.dateIssued}</TableCell>
+      <TableCell>{certification.expiryDate}</TableCell>
+      <TableCell>{certification.certificateFile}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -35,8 +29,8 @@ const OverrideRow = ({ override, index }: Props) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <ViewMore override={override} />
-            <DeleteOverride override={override} />
+            <EditCertification certification={certification} />
+            <DeleteCertification certification={certification} />
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>
@@ -44,4 +38,4 @@ const OverrideRow = ({ override, index }: Props) => {
   );
 };
 
-export default OverrideRow;
+export default CertificationRow;

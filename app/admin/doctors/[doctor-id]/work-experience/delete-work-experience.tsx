@@ -14,14 +14,21 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ModalButtons from "@/components/ui/modal-buttons";
-import { deleteWeeklyAvailability } from "../../actions";
-import { SelectWeeklyAvailabilities } from "@/db/schema";
+import { deleteWorkExperience } from "../../actions";
+import { SelectWorkExperience } from "@/db/schema";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import CenterDivs from "@/components/ui/center-divs";
-import { convertToAmPm } from "@/lib/utils";
+import { queryClient } from "@/app/react-query-client-provider";
+import { queryKeys } from "@/lib/utils";
 
-type Props = { availabilitiesDay: SelectWeeklyAvailabilities };
+type Props = { workExperience: SelectWorkExperience };
 
-const DeleteAvailability = ({ availabilitiesDay }: Props) => {
+const DeleteWorkExperience = ({ workExperience }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -32,10 +39,17 @@ const DeleteAvailability = ({ availabilitiesDay }: Props) => {
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await deleteWeeklyAvailability(availabilitiesDay.id);
+      const res = await deleteWorkExperience({
+        doctorId: workExperience.doctorId,
+        id: workExperience.id,
+      });
 
       if (res.success) {
         toast.success(res.message);
+
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys["work-experience"]],
+        });
 
         closeDialog();
       } else toast.error(res.message);
@@ -51,16 +65,17 @@ const DeleteAvailability = ({ availabilitiesDay }: Props) => {
       <DialogTrigger asChild>
         <Button
           size="sm"
-          variant="outline"
-          className="p-2 h-8 hide-ring border-gray"
+          variant="ghost"
+          className="p-2 h-8 hide-ring justify-between w-full"
         >
+          Delete
           <Trash2 className="w-4 h-4" />
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Availability</DialogTitle>
+          <DialogTitle>Delete Work Experience</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -69,21 +84,19 @@ const DeleteAvailability = ({ availabilitiesDay }: Props) => {
             className="space-y-4 mt-6 capitalize"
           >
             <p className="text-center">
-              Are you sure you want to delete this availability
+              Are you sure you want to delete this Work Experience
             </p>
 
             <br />
             <br />
 
-            <CenterDivs label="Day:" value={availabilitiesDay.day} />
             <CenterDivs
-              label="Start Time:"
-              value={convertToAmPm(availabilitiesDay.startTime)}
+              label="Company Name:"
+              value={workExperience.companyName}
             />
-            <CenterDivs
-              label="End Time:"
-              value={convertToAmPm(availabilitiesDay.endTime)}
-            />
+            <CenterDivs label="Job Title:" value={workExperience.jobTitle} />
+            <CenterDivs label="Start Date:" value={workExperience.startDate} />
+            <CenterDivs label="End Date:" value={workExperience.endDate} />
 
             <br />
 
@@ -99,4 +112,4 @@ const DeleteAvailability = ({ availabilitiesDay }: Props) => {
   );
 };
 
-export default DeleteAvailability;
+export default DeleteWorkExperience;

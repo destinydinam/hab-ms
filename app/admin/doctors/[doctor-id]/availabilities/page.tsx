@@ -1,6 +1,6 @@
 "use client";
 
-import { days } from "@/lib/utils";
+import { days, queryKeys } from "@/lib/utils";
 import { getOverrides, getWeeklyAvailabilities } from "../../actions";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -9,23 +9,25 @@ import AddOverride from "./add-override";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import OverrideRow from "./override-row";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const AvailabilitiesPage = () => {
   const params = useParams();
   const doctorId = params["doctor-id"];
 
   const { data, isLoading } = useQuery({
-    queryKey: ["weekly-availabilities"],
+    queryKey: [queryKeys["weekly-availabilities"]],
     queryFn: async () => await getWeeklyAvailabilities(doctorId as string),
   });
 
   const { data: overrides, isLoading: isFetching } = useQuery({
-    queryKey: ["overrides"],
+    queryKey: [queryKeys.overrides],
     queryFn: async () => await getOverrides(doctorId as string),
   });
 
@@ -71,7 +73,7 @@ const AvailabilitiesPage = () => {
           </div>
         </div>
 
-        <div className="col-span-1 lg:col-span-7 bg-white px-6 py-6 lg:px-12 rounded-lg lg:mt-[61px]">
+        <div className="col-span-1 lg:col-span-7 bg-white px-6 py-6 rounded-lg lg:mt-[61px]">
           <div className="flex items-center gap-8 justify-between md:justify-start">
             <h2 className="font-semibold text-base md:text-lg py-2">
               Overrides
@@ -98,9 +100,29 @@ const AvailabilitiesPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {overrides?.data?.map((override, index) => (
-                  <OverrideRow override={override} index={index} key={index} />
-                ))}
+                {isFetching ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-24 text-center">
+                      <Skeleton className="w-full bg-gray-300 h-10 mt-1" />
+                      <Skeleton className="w-full bg-gray-300 h-10 mt-1" />
+                      <Skeleton className="w-full bg-gray-300 h-10 mt-1" />
+                    </TableCell>
+                  </TableRow>
+                ) : overrides?.data?.length ? (
+                  overrides?.data?.map((override, index) => (
+                    <OverrideRow
+                      override={override}
+                      index={index}
+                      key={index}
+                    />
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-10 text-center">
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>

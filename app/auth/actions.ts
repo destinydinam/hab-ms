@@ -9,7 +9,9 @@ import {
 } from "../zodSchema";
 import { db } from "@/db";
 import {
+  InsertAppointmentSettings,
   InsertUser,
+  appointmentSettingsTable,
   passwordResetTokensTable,
   sessionTable,
   usersTable,
@@ -63,6 +65,23 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
       };
 
     await db.insert(usersTable).values(insertValues);
+
+    const appointmentSettings: InsertAppointmentSettings = {
+      id: generateId(15),
+      hospitalId: insertValues.id,
+      duration: process.env.DEFAULT_DURATION || "5",
+      bufferTime: process.env.DEFAULT_BUFFER_TIME || "2",
+      paymentBeforeBooking: "yes",
+      showDoctorName: "no",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const resp = await db
+      .insert(appointmentSettingsTable)
+      .values(appointmentSettings);
+
+    console.log("signUp ~ resp:", resp);
 
     const session = await lucia.createSession(insertValues.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);

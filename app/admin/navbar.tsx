@@ -24,14 +24,16 @@ const Navbar = (props: Props) => {
     <nav className="w-full border-b py-2 px-4 border-gray-400 bg-glass">
       <div className="max-w-7xl flex items-center justify-between mx-auto">
         <div className="flex items-center gap-6 md:gap-10">
-          <Image
-            alt="logo"
-            src="/logo.png"
-            width={1000}
-            height={1000}
-            priority
-            className="w-16"
-          />
+          <Link href={urls.admin.doctors}>
+            <Image
+              alt="logo"
+              src="/logo.png"
+              width={1000}
+              height={1000}
+              priority
+              className="w-16"
+            />
+          </Link>
 
           <div className="hidden md:flex items-center gap-4 md:gap-6">
             {navlinks.map((link) => (

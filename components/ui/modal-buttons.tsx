@@ -36,7 +36,10 @@ const ModalButtons = (props: Props) => {
             disabled={props?.disabled}
             variant="outline"
             type="submit"
-            onClick={props?.onClick}
+            onClick={() => {
+              console.log("first");
+              props?.onClick && props.onClick();
+            }}
             className="bg-green-500 px-6 border hover:border-green-500 hover:bg-green-100"
           >
             {props.saveText || "Save"}
