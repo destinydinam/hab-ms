@@ -190,12 +190,12 @@ export const createOverride = async (
   try {
     const { user } = await validateRequest();
 
-    const userData = await authUser(user?.id!);
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
 
     const insertValues: InsertOverride = {
       id: generateId(15),
       ...validatedFields.data,
-      hospitalId: userData.id,
+      hospitalId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -259,11 +259,11 @@ export const createCertification = async (
   try {
     const { user } = await validateRequest();
 
-    const userData = await authUser(user?.id!);
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
 
     const insertValues: InsertCertification = {
       id: generateId(15),
-      hospitalId: userData.id,
+      hospitalId: user.id,
       certificateFile: "",
       certificationName: validatedFields.data.certificationName,
       dateIssued: validatedFields.data.dateIssued,
@@ -292,7 +292,7 @@ export const editCertification = async (values: SelectCertification) => {
   try {
     await db
       .update(certificationsTable)
-      .set(validatedFields.data)
+      .set({ ...validatedFields.data, updatedAt: new Date() })
       .where(eq(certificationsTable.id, values.id));
 
     return { success: true, message: "Certification edited Successfully" };
@@ -353,12 +353,12 @@ export const createWorkExperience = async (
   try {
     const { user } = await validateRequest();
 
-    const userData = await authUser(user?.id!);
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
 
     const insertValues: InsertWorkExperience = {
       id: generateId(15),
       doctorId: validatedFields.data.doctorId,
-      hospitalId: userData.id,
+      hospitalId: user.id,
 
       companyName: validatedFields.data.companyName,
       jobTitle: validatedFields.data.jobTitle,
@@ -387,7 +387,7 @@ export const editWorkExperience = async (values: SelectWorkExperience) => {
   try {
     await db
       .update(workExperienceTable)
-      .set(validatedFields.data)
+      .set({ ...validatedFields.data, updatedAt: new Date() })
       .where(eq(workExperienceTable.id, values.id));
 
     return { success: true, message: "Work Experience edited Successfully" };

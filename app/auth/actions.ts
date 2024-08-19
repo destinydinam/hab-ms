@@ -11,6 +11,7 @@ import { db } from "@/db";
 import {
   InsertAppointmentSettings,
   InsertUser,
+  appointmentFormFieldsTable,
   appointmentSettingsTable,
   passwordResetTokensTable,
   sessionTable,
@@ -27,6 +28,7 @@ import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import ResetPasswordTemplate from "@/components/emails/reset-password-template";
 import { Resend } from "resend";
 import { urls } from "@/lib/utils";
+import { InputTypes } from "@/types/type";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
 let message = "An error occurred, Please try again later";
@@ -77,11 +79,17 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
       updatedAt: new Date(),
     };
 
-    const resp = await db
-      .insert(appointmentSettingsTable)
-      .values(appointmentSettings);
+    await db.insert(appointmentSettingsTable).values(appointmentSettings);
 
-    console.log("signUp ~ resp:", resp);
+    await db.insert(appointmentFormFieldsTable).values(
+      defaultFormFields.map((f) => ({
+        id: generateId(15),
+        hospitalId: insertValues.id,
+        ...f,
+        updatedAt: new Date(),
+        createdAt: new Date(),
+      }))
+    );
 
     const session = await lucia.createSession(insertValues.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
@@ -313,3 +321,30 @@ export const authUser = async (id: string) => {
     .where(eq(usersTable.id, id));
   return userData || undefined;
 };
+
+const defaultFormFields = [
+  {
+    inputName: "Full Name",
+    inputType: "text" as InputTypes,
+    required: "yes",
+    placeholder: "",
+  },
+  {
+    inputName: "Email",
+    inputType: "email" as InputTypes,
+    required: "yes",
+    placeholder: "",
+  },
+  {
+    inputName: "Phone Number",
+    inputType: "phoneNumber" as InputTypes,
+    required: "yes",
+    placeholder: "",
+  },
+  {
+    inputName: "Appointment Note",
+    inputType: "textarea" as InputTypes,
+    required: "no",
+    placeholder: "",
+  },
+];

@@ -1,3 +1,38 @@
+CREATE TABLE `appointment_form_fields` (
+	`id` text PRIMARY KEY NOT NULL,
+	`hospital_id` text NOT NULL,
+	`inputName` text NOT NULL,
+	`inputType` text NOT NULL,
+	`required` text NOT NULL,
+	`placeholder` text NOT NULL,
+	`select_data` text,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `appointment_settings` (
+	`id` text PRIMARY KEY NOT NULL,
+	`hospital_id` text NOT NULL,
+	`duration` text NOT NULL,
+	`bufferTime` text NOT NULL,
+	`payment_before_booking` text NOT NULL,
+	`show_doctor_name` text NOT NULL,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `certifications` (
+	`id` text PRIMARY KEY NOT NULL,
+	`doctor_id` text NOT NULL,
+	`hospital_id` text NOT NULL,
+	`certification_name` text NOT NULL,
+	`date_issued` text NOT NULL,
+	`expiry_date` text,
+	`certificate_file` text,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `doctors` (
 	`id` text PRIMARY KEY NOT NULL,
 	`hospital_id` text NOT NULL,
@@ -22,6 +57,7 @@ CREATE TABLE `doctors` (
 --> statement-breakpoint
 CREATE TABLE `overrides` (
 	`id` text PRIMARY KEY NOT NULL,
+	`hospital_id` text,
 	`doctor_id` text NOT NULL,
 	`start_date` text NOT NULL,
 	`end_date` text NOT NULL,
@@ -62,6 +98,18 @@ CREATE TABLE `weekly_availabilities` (
 	`day` text NOT NULL,
 	`start_time` text NOT NULL,
 	`end_time` text NOT NULL,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `work_experience` (
+	`id` text PRIMARY KEY NOT NULL,
+	`doctor_id` text NOT NULL,
+	`hospital_id` text NOT NULL,
+	`company_name` text NOT NULL,
+	`job_title` text NOT NULL,
+	`start_date` text,
+	`end_date` text,
 	`created_at` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` integer NOT NULL
 );

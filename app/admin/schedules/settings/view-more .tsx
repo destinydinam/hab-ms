@@ -11,13 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { File } from "lucide-react";
 import { useState } from "react";
-import { SelectOverride } from "@/db/schema";
+import { SelectAppointmentFormFields } from "@/db/schema";
 import CenterDivs from "@/components/ui/center-divs";
-import { convertToAmPm } from "@/lib/utils";
 
-type Props = { override: SelectOverride };
+type Props = { formField: SelectAppointmentFormFields };
 
-const ViewMore = ({ override }: Props) => {
+const ViewMore = ({ formField }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -41,14 +40,29 @@ const ViewMore = ({ override }: Props) => {
         <br />
         <br />
 
-        <CenterDivs label="Start Date:" value={override.startDate} />
-        <CenterDivs
-          label="start Time:"
-          value={convertToAmPm(override.startTime)}
-        />
-        <CenterDivs label="End Date:" value={override.endDate} />
-        <CenterDivs label="End Time:" value={convertToAmPm(override.endTime)} />
-        <CenterDivs label="Reason:" value={override.reason} />
+        <CenterDivs label="Input Name:" value={formField.inputName} />
+        <CenterDivs label="Input Type:" value={formField.inputType} />
+        <CenterDivs label="Required:" value={formField.required} />
+        <CenterDivs label="Placeholder:" value={formField.placeholder} />
+
+        {formField.inputType === "select" && (
+          <CenterDivs
+            label="Select Data:"
+            value={
+              <div className="flex flex-col gap-3">
+                {(
+                  JSON.parse(
+                    (formField.selectData as string) || "[]"
+                  ) as string[]
+                ).map((value, i) => (
+                  <div key={i}>
+                    {i + 1}. {value}
+                  </div>
+                ))}
+              </div>
+            }
+          />
+        )}
 
         <br />
 

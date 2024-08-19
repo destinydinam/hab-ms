@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1723389736600,
-      "tag": "0000_smiling_manta",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1723981240876,
-      "tag": "0001_organic_spiral",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1723997428315,
-      "tag": "0002_sticky_charles_xavier",
+      "when": 1724029350929,
+      "tag": "0000_daffy_warpath",
       "breakpoints": true
     }
   ]

@@ -6,3 +6,12 @@ export type Days =
   | "friday"
   | "saturday"
   | "sunday";
+
+export type InputTypes =
+  | "text"
+  | "email"
+  | "textarea"
+  | "phoneNumber"
+  | "select"
+  | "date"
+  | "time";

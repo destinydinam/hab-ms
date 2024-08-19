@@ -1,5 +1,5 @@
 import { SelectDoctor } from "@/db/schema";
-import { Days } from "@/types/type";
+import { Days, InputTypes } from "@/types/type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -79,10 +79,12 @@ export const queryKeys = {
   "weekly-availabilities": "weekly-availabilities",
   appointments: "appointments",
   "appointments-settings": "appointments-settings",
+  "appointment-form-fields": "appointment-form-fields",
 };
 
 export const durations = [
   { value: 1, label: "1 minutes" },
+  { value: 2, label: "2 minutes" },
   { value: 3, label: "3 minutes" },
   { value: 5, label: "5 minutes" },
   { value: 10, label: "10 minutes" },
@@ -93,3 +95,13 @@ export const durations = [
 ];
 
 export const noYes = ["no", "yes"];
+
+export const inputTypes: InputTypes[] = [
+  "text",
+  "email",
+  "textarea",
+  "phoneNumber",
+  "select",
+  "date",
+  "time",
+];

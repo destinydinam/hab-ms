@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,18 +17,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Pencil } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ModalButtons from "@/components/ui/modal-buttons";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
 import { queryClient } from "@/app/react-query-client-provider";
-import { SelectAppointmentSettings } from "@/db/schema";
-import { AppointmentSettingsSchema } from "../zod-schema";
-import { editAppointmentSettings } from "../actions";
-import { durations, noYes, queryKeys } from "@/lib/utils";
+import { AppointmentFormFieldsSchema } from "../zod-schema";
+import { createAppointmentFormFields } from "../actions";
+import { inputTypes, noYes, queryKeys } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -36,39 +37,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type Props = { appointmentSettings: SelectAppointmentSettings };
-
-const EditAppointmentSettings = ({ appointmentSettings }: Props) => {
+const AddAppointmentFormFields = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const closeDialog = () => setOpen(false);
 
-  const form = useForm<z.infer<typeof AppointmentSettingsSchema>>({
-    resolver: zodResolver(AppointmentSettingsSchema),
+  const form = useForm<z.infer<typeof AppointmentFormFieldsSchema>>({
+    resolver: zodResolver(AppointmentFormFieldsSchema),
     defaultValues: {
-      duration: appointmentSettings.duration,
-      bufferTime: appointmentSettings.bufferTime,
-      paymentBeforeBooking: appointmentSettings.paymentBeforeBooking,
-      showDoctorName: appointmentSettings.showDoctorName,
+      inputName: "",
+      inputType: "",
+      required: "",
+      placeholder: "",
+      selectData: "",
     },
   });
 
   const onSubmit = async (
-    values: z.infer<typeof AppointmentSettingsSchema>
+    values: z.infer<typeof AppointmentFormFieldsSchema>
   ) => {
     setIsLoading(true);
     try {
-      const res = await editAppointmentSettings({
-        ...appointmentSettings,
-        ...values,
-      });
+      const res = await createAppointmentFormFields(values);
 
       if (res.success) {
         toast.success(res.message);
 
         queryClient.invalidateQueries({
-          queryKey: [queryKeys["appointments-settings"]],
+          queryKey: [queryKeys["appointment-form-fields"]],
         });
 
         closeDialog();
@@ -86,16 +83,18 @@ const EditAppointmentSettings = ({ appointmentSettings }: Props) => {
         <Button
           size="sm"
           variant="outline"
-          className="px-6 h-8 hide-ring justify-between gap-3"
+          className="p-2 h-8 hide-ring border-gray gap-3 px-3"
         >
-          <Pencil className="w-4 h-4" />
-          Edit
+          <Plus className="w-4 h-4" /> Add New Field
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update Appointment Settings</DialogTitle>
+          <DialogTitle>Add New Field</DialogTitle>
+          <DialogDescription>
+            Enter input fields that you want patients to fill
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -105,23 +104,37 @@ const EditAppointmentSettings = ({ appointmentSettings }: Props) => {
           >
             <FormField
               control={form.control}
-              name="duration"
+              name="inputName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Duration</FormLabel>
+                  <FormLabel>Input Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="inputType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Input Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select duration" />
+                        <SelectValue placeholder="Select Type" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {durations.map((duration, i) => (
-                        <SelectItem key={i} value={duration.value.toString()}>
-                          {duration.label}
+                      {inputTypes.map((input, i) => (
+                        <SelectItem key={i} value={input}>
+                          {input}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -134,46 +147,17 @@ const EditAppointmentSettings = ({ appointmentSettings }: Props) => {
 
             <FormField
               control={form.control}
-              name="bufferTime"
+              name="required"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Buffer Time</FormLabel>
+                  <FormLabel>Required</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select buffer time" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {durations.map((duration, i) => (
-                        <SelectItem key={i} value={duration.value.toString()}>
-                          {duration.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="paymentBeforeBooking"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Payment Before Booking</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Option" />
+                        <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -192,28 +176,13 @@ const EditAppointmentSettings = ({ appointmentSettings }: Props) => {
 
             <FormField
               control={form.control}
-              name="showDoctorName"
+              name="placeholder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Show Doctor Name</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Option" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {noYes.map((item, i) => (
-                        <SelectItem key={i} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
+                  <FormLabel>Placeholder</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -229,4 +198,4 @@ const EditAppointmentSettings = ({ appointmentSettings }: Props) => {
   );
 };
 
-export default EditAppointmentSettings;
+export default AddAppointmentFormFields;
