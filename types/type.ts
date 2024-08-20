@@ -15,3 +15,5 @@ export type InputTypes =
   | "select"
   | "date"
   | "time";
+
+export type ScheduleForType = "doctors" | "doctor-types";

@@ -73,6 +73,7 @@ export const days: Days[] = [
 ];
 
 export const queryKeys = {
+  doctors: "doctors",
   overrides: "overrides",
   "work-experience": "work-experience",
   certifications: "certifications",

@@ -127,6 +127,23 @@ export const editDoctor = async ({ doctor, values }: EditDoctorValues) => {
   }
 };
 
+export const getDoctors = async () => {
+  try {
+    const { user } = await validateRequest();
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
+
+    const doctors = await db
+      .select()
+      .from(doctorsTable)
+      .where(eq(doctorsTable.hospitalId, user?.id!));
+
+    return { success: true, data: doctors };
+  } catch (error) {
+    console.log("getDoctors ~ error:", error);
+    return { success: false, message };
+  }
+};
+
 // =======================  Weekly Availabilities =======================
 
 export const getWeeklyAvailabilities = async (doctorId: string) => {

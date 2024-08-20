@@ -42,9 +42,7 @@ const SigninForm = () => {
       const res = await signIn(values);
       if (res.success) {
         if (res.message) {
-          toast.success(
-            "We sent you a password reset email. Please check your mail."
-          );
+          toast.success(res.message);
 
           form.reset({ email: "" });
         } else {
