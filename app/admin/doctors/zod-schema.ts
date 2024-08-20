@@ -29,14 +29,52 @@ export const EditAvailabilitySchema = z.object({
   endTime: z.string(),
 });
 
-export const AddOverrideSchema = z.object({
-  doctorId: z.string().min(1, { message: "DoctorId Required" }),
-  startDate: z.string().min(1, { message: "Start Date Required" }),
-  startTime: z.string().min(1, { message: "Start Time Required" }),
-  endDate: z.string().min(1, { message: "End Date Required" }),
-  endTime: z.string().min(1, { message: "End Time Required" }),
-  reason: z.string().optional().or(z.literal("")),
-});
+export const AddOverrideSchema = z
+  .object({
+    doctorId: z.string().min(1, { message: "DoctorId Required" }),
+    startDate: z.string().min(1, { message: "Start Date Required" }),
+    startTime: z.string().min(1, { message: "Start Time Required" }),
+    endDate: z.string().min(1, { message: "End Date Required" }),
+    endTime: z.string().min(1, { message: "End Time Required" }),
+    reason: z.string().optional().or(z.literal("")),
+  })
+  .refine(
+    (data) => {
+      const currentDateTime = new Date();
+      const startDateTime = new Date(`${data.startDate} ${data.startTime}`);
+
+      return startDateTime >= currentDateTime;
+    },
+    {
+      message:
+        "Start Date and Time must be greater than or equal to current Date and Time",
+      path: ["startTime"],
+    }
+  )
+  .refine(
+    (data) => {
+      const startDate = new Date(`${data.startDate}`);
+      const endDate = new Date(`${data.endDate}`);
+
+      return startDate <= endDate;
+    },
+    {
+      message: "End Date must be greater than or equal to Start Date",
+      path: ["endDate"],
+    }
+  )
+  .refine(
+    (data) => {
+      const startDate = new Date(`${data.startDate} ${data.startTime}`);
+      const endDate = new Date(`${data.endDate} ${data.endTime}`);
+
+      return startDate < endDate;
+    },
+    {
+      message: "End Time must be greater than Start Time",
+      path: ["endTime"],
+    }
+  );
 
 export const AddCertificationSchema = z.object({
   doctorId: z.string().min(1, { message: "DoctorId Required" }),

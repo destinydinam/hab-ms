@@ -25,11 +25,11 @@ import {
   workExperienceTable,
 } from "@/db/schema";
 import { db } from "@/db";
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, gte, or } from "drizzle-orm";
 import { authUser } from "@/app/auth/actions";
 import { validateRequest } from "@/auth";
 import { revalidatePath } from "next/cache";
-import { days, urls } from "@/lib/utils";
+import { checkOverlap, days, urls } from "@/lib/utils";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
 let message = "An error occurred, Please try again later";
@@ -43,12 +43,12 @@ export const createDoctor = async (values: z.infer<typeof AddDoctorSchema>) => {
   try {
     const { user } = await validateRequest();
 
-    const userData = await authUser(user?.id!);
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
 
     const insertValues: InsertDoctor = {
       id: generateId(15),
       ...validatedFields.data,
-      hospitalId: userData.id,
+      hospitalId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -74,6 +74,7 @@ export const createDoctor = async (values: z.infer<typeof AddDoctorSchema>) => {
     const weeklyAvailabilitiesInsertValues: InsertWeeklyAvailabilities[] =
       days.map((day) => ({
         id: generateId(15),
+        hospitalId: user.id,
         doctorId: insertValues.id,
         day,
         startTime: insertValues.startTime,
@@ -160,6 +161,24 @@ export const getWeeklyAvailabilities = async (doctorId: string) => {
   }
 };
 
+export const getWeeklyAvailabilitiesByHospitalId = async () => {
+  try {
+    const { user } = await validateRequest();
+
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
+
+    const weeklyAvailabilities = await db
+      .select()
+      .from(weeklyAvailabilitiesTable)
+      .where(eq(weeklyAvailabilitiesTable.hospitalId, user.id));
+
+    return { success: true, data: weeklyAvailabilities };
+  } catch (error) {
+    console.log("getWeeklyAvailabilitiesByHospitalId ~ error:", error);
+    return { success: false, message };
+  }
+};
+
 export const editWeeklyAvailability = async (
   values: z.infer<typeof EditAvailabilitySchema>
 ) => {
@@ -171,7 +190,7 @@ export const editWeeklyAvailability = async (
   try {
     await db
       .update(weeklyAvailabilitiesTable)
-      .set(validatedFields.data)
+      .set({ ...validatedFields.data, updatedAt: new Date() })
       .where(eq(weeklyAvailabilitiesTable.id, validatedFields.data.id));
 
     return { success: true, message: "Availability edited Successfully" };
@@ -217,13 +236,44 @@ export const createOverride = async (
       updatedAt: new Date(),
     };
 
-    // do a check to make sure there are no overlapping overrides
+    const doctorOverrides = await db
+      .select()
+      .from(overridesTable)
+      .where(eq(overridesTable.doctorId, insertValues.doctorId));
+
+    if (doctorOverrides.length)
+      for (let i = 0; i < doctorOverrides.length; i++) {
+        const doctorOverride = doctorOverrides[i];
+
+        const overrideStart = new Date(
+          doctorOverride.startDate + " " + doctorOverride.startTime
+        );
+        const overrideEnd = new Date(
+          doctorOverride.endDate + " " + doctorOverride.endTime
+        );
+
+        const newStart = new Date(
+          insertValues.startDate + " " + insertValues.startTime
+        );
+        const newEnd = new Date(
+          insertValues.endDate + " " + insertValues.endTime
+        );
+
+        const response = checkOverlap({
+          overrideStart,
+          overrideEnd,
+          newStart,
+          newEnd,
+        });
+
+        if (!response.success) return response;
+      }
 
     await db.insert(overridesTable).values(insertValues);
 
     return { success: true, message: "Override added Successfully" };
   } catch (error) {
-    console.log("createUser ~ error:", error);
+    console.log("error:", error);
     return { success: false, message };
   }
 };
@@ -238,6 +288,32 @@ export const getOverrides = async (doctorId: string) => {
     return { success: true, data: overrides };
   } catch (error) {
     console.log("getOverrides ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getOverridesByHospitalId = async () => {
+  try {
+    const { user } = await validateRequest();
+
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
+
+    const today = new Date();
+    const todayFormatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    const overrides = await db
+      .select()
+      .from(overridesTable)
+      .where(
+        and(
+          eq(overridesTable.hospitalId, user.id),
+          gte(overridesTable.startDate, todayFormatted)
+        )
+      );
+
+    return { success: true, data: overrides };
+  } catch (error) {
+    console.log("getOverridesByHospitalId ~ error:", error);
     return { success: false, message };
   }
 };

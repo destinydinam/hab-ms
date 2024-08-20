@@ -395,13 +395,12 @@ const AddDoctor = () => {
 export default AddDoctor;
 
 export const doctorTypes = [
-  "Others",
+  "General Practitioner (GP)",
   "Anesthesiologist",
   "Cardiologist",
   "Dermatologist",
   "Endocrinologist",
   "Gastroenterologist",
-  "General Practitioner (GP)",
   "Gynecologist",
   "Hematologist",
   "Infectious Disease Specialist",
@@ -419,5 +418,6 @@ export const doctorTypes = [
   "Radiologist",
   "Rheumatologist",
   "Surgeon",
+  "Others",
   "Urologist",
 ];

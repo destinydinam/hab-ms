@@ -62,6 +62,7 @@ export const doctorsTable = sqliteTable("doctors", {
 export const weeklyAvailabilitiesTable = sqliteTable("weekly_availabilities", {
   id: text("id").notNull().primaryKey(),
   doctorId: text("doctor_id").notNull(),
+  hospitalId: text("hospital_id"),
   day: text("day", {
     enum: [
       "monday",

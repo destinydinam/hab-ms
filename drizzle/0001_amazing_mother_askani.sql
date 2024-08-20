@@ -1,0 +1,1 @@
+ALTER TABLE `weekly_availabilities` ADD `hospital_id` text;

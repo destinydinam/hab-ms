@@ -1,5 +1,5 @@
 import { SelectDoctor } from "@/db/schema";
-import { Days, InputTypes } from "@/types/type";
+import { Days, InputTypes, ScheduleStatus } from "@/types/type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -106,3 +106,92 @@ export const inputTypes: InputTypes[] = [
   "date",
   "time",
 ];
+
+export const scheduleStatuses: {
+  label: string;
+  value: ScheduleStatus;
+  color?: string;
+}[] = [
+  { label: "All", value: "all" },
+  { label: "Booked", value: "booked", color: "#FFD700" },
+  { label: "Available", value: "available", color: "#1AAA55" },
+  { label: "Cancelled", value: "cancelled", color: "#FF5E5E" },
+];
+
+export const checkOverlap = ({
+  overrideStart,
+  overrideEnd,
+  newStart,
+  newEnd,
+}: {
+  overrideStart: Date;
+  overrideEnd: Date;
+  newStart: Date;
+  newEnd: Date;
+}): { success: boolean; message: string } => {
+  if (
+    (newStart.toISOString() >= overrideStart.toISOString() &&
+      newStart.toISOString() < overrideEnd.toISOString()) || // check if the new start date is within the override period
+    (newEnd.toISOString() > overrideStart.toISOString() &&
+      newEnd.toISOString() <= overrideEnd.toISOString()) || // check if the new end date is within the override period
+    (newStart.toISOString() <= overrideStart.toISOString() &&
+      newEnd.toISOString() > overrideEnd.toISOString()) || // check if the new period entirely contains the override period
+    newStart.toISOString() === overrideEnd.toISOString() // checks if the new start date is exactly equal to the override end date.
+  ) {
+    return {
+      success: false,
+      message: `There is an overlap with the 
+      override with the following details: 
+      Start Date:${overrideStart} - End Date: ${overrideEnd}`,
+    };
+  } else {
+    return { success: true, message: "No overlap" };
+  }
+};
+
+export const addMinutes = (time: string, minutes: number) => {
+  const [hours, mins] = time.split(":").map(Number);
+  const totalMinutes = hours * 60 + mins + minutes;
+  const newHours = Math.floor(totalMinutes / 60);
+  const newMins = totalMinutes % 60;
+
+  return `${padZero(newHours)}:${padZero(newMins)}`;
+};
+
+function padZero(num: number) {
+  return (num < 10 ? "0" : "") + num;
+}
+
+export const calculateDurations = ({
+  startTime,
+  endTime,
+  duration,
+  bufferTime,
+}: {
+  startTime: string;
+  endTime: string;
+  duration: number;
+  bufferTime: number;
+}) => {
+  const startMinutes = timeToMinutes(startTime);
+  const endMinutes = timeToMinutes(endTime);
+  let currentMinutes = startMinutes;
+  let numDurations = 0;
+
+  while (currentMinutes + duration + bufferTime <= endMinutes) {
+    currentMinutes += duration;
+    numDurations++;
+    currentMinutes += bufferTime;
+  }
+
+  if (currentMinutes + duration <= endMinutes) {
+    numDurations++;
+  }
+
+  return numDurations;
+};
+
+function timeToMinutes(time: string) {
+  const [hours, mins] = time.split(":").map(Number);
+  return hours * 60 + mins;
+}

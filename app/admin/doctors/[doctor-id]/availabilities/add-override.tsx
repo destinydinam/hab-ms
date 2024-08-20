@@ -66,8 +66,20 @@ const AddOverride = ({ doctorId }: Props) => {
 
         queryClient.invalidateQueries({ queryKey: ["overrides"] });
 
+        form.reset({
+          startTime: "",
+          endDate: "",
+          startDate: "",
+          endTime: "",
+          reason: "",
+        });
+
         closeDialog();
-      } else toast.error(res.message);
+      } else
+        toast.error(res.message, {
+          closeButton: true,
+          duration: 300000,
+        });
     } catch (error) {
       toast.error("Something went wrong!");
     } finally {

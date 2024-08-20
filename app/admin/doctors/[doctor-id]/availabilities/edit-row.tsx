@@ -47,6 +47,7 @@ const EditRow = ({ availabilitiesDay, setEdit }: Props) => {
 
       if (res.success) {
         toast.success(res.message);
+        setEdit(false);
       } else toast.error(res.message);
     } catch (error) {
       toast.error("Something went wrong!");
