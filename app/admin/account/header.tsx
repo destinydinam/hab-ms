@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -16,7 +17,9 @@ const Header = ({ url }: Props) => {
   return (
     <pre className="bg-gray-200 font-bold p-4 rounded-md text-sm font-mono overflow-auto">
       <div className="flex flex-col md:flex-row justify-between gap-4">
-        {url}
+        <Link target="_blank" href={url}>
+          {url}
+        </Link>
         <CopyToClipboard text={url} onCopy={handleCopy}>
           <pre className="bg-gray-600 cursor-pointer text-white w-fit px-4 py-0.5 rounded-md text-sm font-mono">
             {copied ? "Copied!" : "Copy"}

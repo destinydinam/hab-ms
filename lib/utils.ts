@@ -18,7 +18,7 @@ export const urls = {
     schedules: "/admin/schedules",
     account: "/admin/account",
   },
-  public: { "schedule-appointment": "/schedule-appointment" },
+  public: { "schedule-appointment": "/public/schedule-appointment" },
 };
 
 export const min = (length: number) => ({
