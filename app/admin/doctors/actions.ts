@@ -57,9 +57,12 @@ export const createDoctor = async (values: z.infer<typeof AddDoctorSchema>) => {
       .select()
       .from(doctorsTable)
       .where(
-        or(
-          eq(doctorsTable.email, validatedFields.data.email),
-          eq(doctorsTable.phoneNumber, validatedFields.data.phoneNumber)
+        and(
+          eq(doctorsTable.hospitalId, insertValues.hospitalId),
+          or(
+            eq(doctorsTable.email, validatedFields.data.email),
+            eq(doctorsTable.phoneNumber, validatedFields.data.phoneNumber)
+          )
         )
       );
 
