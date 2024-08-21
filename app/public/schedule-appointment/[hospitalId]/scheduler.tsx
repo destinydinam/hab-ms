@@ -8,8 +8,10 @@ import {
   Resize,
   EventRenderedArgs,
 } from "@syncfusion/ej2-react-schedule";
-import { Slot } from "@/types/type";
+import { ScheduleSlot, Slot } from "@/types/type";
 import { scheduleStatuses } from "@/lib/utils";
+import { useState } from "react";
+import SlotPopup from "./slot-popup";
 
 type Props = { slots: Slot[] };
 
@@ -21,7 +23,20 @@ const Scheduler = ({ slots }: Props) => {
     IsReadonly: true,
     Subject: slot.startTime + "-" + slot.endTime + " " + slot.status,
     Color: scheduleStatuses.find((s) => s.value === slot.status)?.color,
+    ...slot,
   }));
+
+  const [slot, setSlot] = useState<ScheduleSlot>();
+  const [open, setOpen] = useState(false);
+
+  const closeDialog = () => setOpen(false);
+
+  const handleEventClick = (args: any) => {
+    console.log("handleEventClick ~ args:", args);
+    args.cancel = true;
+    setOpen(true);
+    setSlot(args.event);
+  };
 
   const eventTemplate = (props: any) => {
     return (
@@ -38,6 +53,7 @@ const Scheduler = ({ slots }: Props) => {
         height="550px"
         currentView="Week"
         selectedDate={new Date()}
+        eventClick={handleEventClick}
         eventRendered={(args: EventRenderedArgs) => {
           args.element.style.background = args.data?.Color;
         }}
@@ -56,6 +72,15 @@ const Scheduler = ({ slots }: Props) => {
 
         <Inject services={[Week, Month, Resize]} />
       </ScheduleComponent>
+
+      {slot && (
+        <SlotPopup
+          open={open}
+          setOpen={setOpen}
+          closeDialog={closeDialog}
+          slot={slot}
+        />
+      )}
     </>
   );
 };

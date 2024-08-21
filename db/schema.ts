@@ -13,6 +13,7 @@ export const usersTable = sqliteTable("users", {
   address: text("address").notNull(),
   phoneNumber: text("phoneNumber").notNull(),
   hashedPassword: text("hashed_password").notNull(),
+  hospitalLogo: text("hospital_logo"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

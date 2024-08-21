@@ -43,6 +43,7 @@ import ModalButtons from "@/components/ui/modal-buttons";
 import { AddDoctorSchema } from "../zod-schema";
 import { editDoctor } from "../actions";
 import { SelectDoctor } from "@/db/schema";
+import { doctorTypes } from "../data";
 
 const EditDoctor = ({ doctor }: { doctor: SelectDoctor }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -409,31 +410,3 @@ const EditDoctor = ({ doctor }: { doctor: SelectDoctor }) => {
 };
 
 export default EditDoctor;
-
-export const doctorTypes = [
-  "Others",
-  "Anesthesiologist",
-  "Cardiologist",
-  "Dermatologist",
-  "Endocrinologist",
-  "Gastroenterologist",
-  "General Practitioner (GP)",
-  "Gynecologist",
-  "Hematologist",
-  "Infectious Disease Specialist",
-  "Internist",
-  "Nephrologist",
-  "Neurologist",
-  "Obstetrician",
-  "Oncologist",
-  "Ophthalmologist",
-  "Orthopedic Surgeon",
-  "Otolaryngologist (ENT)",
-  "Pediatrician",
-  "Psychiatrist",
-  "Pulmonologist",
-  "Radiologist",
-  "Rheumatologist",
-  "Surgeon",
-  "Urologist",
-];

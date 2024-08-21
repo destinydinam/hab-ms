@@ -15,6 +15,13 @@
       "when": 1724171844476,
       "tag": "0001_amazing_mother_askani",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1724263296734,
+      "tag": "0002_third_obadiah_stane",
+      "breakpoints": true
     }
   ]
 }

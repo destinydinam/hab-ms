@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
@@ -43,6 +42,7 @@ import {
 } from "@/components/ui/select";
 import ModalButtons from "@/components/ui/modal-buttons";
 import { createDoctor } from "./actions";
+import { doctorTypes } from "./data";
 
 const AddDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -393,31 +393,3 @@ const AddDoctor = () => {
 };
 
 export default AddDoctor;
-
-export const doctorTypes = [
-  "General Practitioner (GP)",
-  "Anesthesiologist",
-  "Cardiologist",
-  "Dermatologist",
-  "Endocrinologist",
-  "Gastroenterologist",
-  "Gynecologist",
-  "Hematologist",
-  "Infectious Disease Specialist",
-  "Internist",
-  "Nephrologist",
-  "Neurologist",
-  "Obstetrician",
-  "Oncologist",
-  "Ophthalmologist",
-  "Orthopedic Surgeon",
-  "Otolaryngologist (ENT)",
-  "Pediatrician",
-  "Psychiatrist",
-  "Pulmonologist",
-  "Radiologist",
-  "Rheumatologist",
-  "Surgeon",
-  "Others",
-  "Urologist",
-];

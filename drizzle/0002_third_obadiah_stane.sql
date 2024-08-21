@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `hospital_logo` text;

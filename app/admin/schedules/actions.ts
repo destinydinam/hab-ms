@@ -63,6 +63,23 @@ export const getAppointmentSettings = async () => {
   }
 };
 
+export const getAppointmentSettingsPublic = async (hospitalId: string) => {
+  try {
+    if (!hospitalId)
+      return { success: false, message: "no hospital Id provided" };
+
+    const [appointmentSettings] = await db
+      .select()
+      .from(appointmentSettingsTable)
+      .where(eq(appointmentSettingsTable.hospitalId, hospitalId));
+
+    return { success: true, data: appointmentSettings };
+  } catch (error) {
+    console.log("getAppointmentSettingsPublic ~ error:", error);
+    return { success: false, message };
+  }
+};
+
 export const createAppointmentFormFields = async (
   values: z.infer<typeof AppointmentFormFieldsSchema>
 ) => {

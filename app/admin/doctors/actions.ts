@@ -148,6 +148,23 @@ export const getDoctors = async () => {
   }
 };
 
+export const getDoctorsPublic = async (hospitalId: string) => {
+  try {
+    if (!hospitalId)
+      return { success: false, message: "No hospital Id provided" };
+
+    const doctors = await db
+      .select()
+      .from(doctorsTable)
+      .where(eq(doctorsTable.hospitalId, hospitalId));
+
+    return { success: true, data: doctors };
+  } catch (error) {
+    console.log("getDoctors ~ error:", error);
+    return { success: false, message };
+  }
+};
+
 // =======================  Weekly Availabilities =======================
 
 export const getWeeklyAvailabilities = async (doctorId: string) => {
@@ -174,6 +191,25 @@ export const getWeeklyAvailabilitiesByHospitalId = async () => {
       .select()
       .from(weeklyAvailabilitiesTable)
       .where(eq(weeklyAvailabilitiesTable.hospitalId, user.id));
+
+    return { success: true, data: weeklyAvailabilities };
+  } catch (error) {
+    console.log("getWeeklyAvailabilitiesByHospitalId ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getWeeklyAvailabilitiesByHospitalIdPublic = async (
+  hospitalId: string
+) => {
+  try {
+    if (!hospitalId)
+      return { success: false, message: "no hospital Id provided" };
+
+    const weeklyAvailabilities = await db
+      .select()
+      .from(weeklyAvailabilitiesTable)
+      .where(eq(weeklyAvailabilitiesTable.hospitalId, hospitalId));
 
     return { success: true, data: weeklyAvailabilities };
   } catch (error) {
@@ -317,6 +353,31 @@ export const getOverridesByHospitalId = async () => {
     return { success: true, data: overrides };
   } catch (error) {
     console.log("getOverridesByHospitalId ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getOverridesByHospitalIdPublic = async (hospitalId: string) => {
+  try {
+    if (!hospitalId)
+      return { success: false, message: "no hospital Id provided" };
+
+    const today = new Date();
+    const todayFormatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    const overrides = await db
+      .select()
+      .from(overridesTable)
+      .where(
+        and(
+          eq(overridesTable.hospitalId, hospitalId),
+          gte(overridesTable.startDate, todayFormatted)
+        )
+      );
+
+    return { success: true, data: overrides };
+  } catch (error) {
+    console.log("getOverridesByHospitalIdPublic ~ error:", error);
     return { success: false, message };
   }
 };

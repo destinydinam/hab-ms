@@ -19,7 +19,6 @@ import {
 import { ScheduleForType, ScheduleStatus, Slot } from "@/types/type";
 import {
   getDoctors,
-  getOverrides,
   getOverridesByHospitalId,
   getWeeklyAvailabilitiesByHospitalId,
 } from "../../doctors/actions";
@@ -33,9 +32,9 @@ import {
   queryKeys,
   scheduleStatuses,
 } from "@/lib/utils";
-import { doctorTypes } from "../../doctors/add-doctor";
 import { getAppointmentSettings } from "../actions";
 import { SelectOverride } from "@/db/schema";
+import { doctorTypes } from "../../doctors/data";
 
 type Props = {};
 
@@ -44,9 +43,7 @@ const MAX_BOOKING_DAYS = 30;
 const SchedulerTab = (props: Props) => {
   const scheduleForType = useScheduleForType();
   const scheduleFor = useScheduleFor();
-  console.log("SchedulerTab ~ scheduleFor:", scheduleFor);
   const scheduleStatus = useScheduleStatus();
-  console.log("SchedulerTab ~ scheduleStatus:", scheduleStatus);
 
   const setScheduleForType = useSetScheduleForType();
   const setScheduleFor = useSetScheduleFor();
@@ -71,8 +68,6 @@ const SchedulerTab = (props: Props) => {
     queryKey: [queryKeys.overrides],
     queryFn: async () => await getOverridesByHospitalId(),
   });
-
-  console.log({ availabilities, appointmentSettings, overrides });
 
   let values = [{ label: "All", value: "all" }];
 
@@ -155,8 +150,6 @@ const SchedulerTab = (props: Props) => {
     }
   }
 
-  console.log("SchedulerTab ~ slots:", slots.length);
-
   if (slots.length && data?.data?.length) {
     slots = (() => {
       if (scheduleFor && scheduleFor !== "all") {
@@ -176,8 +169,6 @@ const SchedulerTab = (props: Props) => {
       return slots;
     })();
   }
-
-  console.log("SchedulerTab ~ slots:", slots.length);
 
   return (
     <div>
