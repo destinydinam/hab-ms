@@ -13,7 +13,12 @@ export const urls = {
   signin: "/auth/signin",
   signup: "/auth/signup",
   "reset-password": "/auth/reset-password",
-  admin: { doctors: "/admin/doctors", schedules: "/admin/schedules" },
+  admin: {
+    doctors: "/admin/doctors",
+    schedules: "/admin/schedules",
+    account: "/admin/account",
+  },
+  public: { "schedule-appointment": "/schedule-appointment" },
 };
 
 export const min = (length: number) => ({

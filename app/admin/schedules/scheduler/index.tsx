@@ -44,7 +44,9 @@ const MAX_BOOKING_DAYS = 30;
 const SchedulerTab = (props: Props) => {
   const scheduleForType = useScheduleForType();
   const scheduleFor = useScheduleFor();
+  console.log("SchedulerTab ~ scheduleFor:", scheduleFor);
   const scheduleStatus = useScheduleStatus();
+  console.log("SchedulerTab ~ scheduleStatus:", scheduleStatus);
 
   const setScheduleForType = useSetScheduleForType();
   const setScheduleFor = useSetScheduleFor();
@@ -85,7 +87,7 @@ const SchedulerTab = (props: Props) => {
       }
   }
 
-  const slots: Slot[] = [];
+  let slots: Slot[] = [];
 
   if (availabilities?.data?.length && appointmentSettings?.data) {
     for (let i = 0; i < MAX_BOOKING_DAYS; i++) {
@@ -153,7 +155,29 @@ const SchedulerTab = (props: Props) => {
     }
   }
 
-  // console.log("SchedulerTab ~ slots:", slots);
+  console.log("SchedulerTab ~ slots:", slots.length);
+
+  if (slots.length && data?.data?.length) {
+    slots = (() => {
+      if (scheduleFor && scheduleFor !== "all") {
+        if (scheduleForType === "doctor-types")
+          slots = slots.filter(
+            (item) =>
+              data?.data.find((d) => d.id === item.doctor)?.doctorType ===
+              scheduleFor
+          );
+        else slots = slots.filter((item) => item.doctor === scheduleFor);
+      }
+
+      if (scheduleStatus && scheduleStatus !== "all") {
+        slots = slots.filter((item) => item.status === scheduleStatus);
+      }
+
+      return slots;
+    })();
+  }
+
+  console.log("SchedulerTab ~ slots:", slots.length);
 
   return (
     <div>

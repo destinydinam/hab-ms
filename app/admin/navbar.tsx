@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn, urls } from "@/lib/utils";
-import { Calendar, LogOut } from "lucide-react";
+import { Calendar, LogOut, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -95,6 +95,20 @@ const Navbar = (props: Props) => {
                 </DropdownMenuItem>
               </Link>
 
+              <Link href={urls.admin.account}>
+                <DropdownMenuItem
+                  className={cn(
+                    "h-10 cursor-pointer hover:text-black",
+                    pathname === urls.admin.account
+                      ? "text-black"
+                      : "text-gray-500"
+                  )}
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  Account
+                </DropdownMenuItem>
+              </Link>
+
               <DropdownMenuItem
                 className={cn(
                   "h-10 cursor-pointer hover:text-black text-gray-500"
@@ -117,4 +131,5 @@ export default Navbar;
 const navlinks = [
   { name: "Doctors", url: urls.admin.doctors },
   { name: "Schedules", url: urls.admin.schedules },
+  { name: "Account", url: urls.admin.account },
 ];
