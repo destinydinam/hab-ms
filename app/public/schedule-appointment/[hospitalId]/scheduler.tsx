@@ -12,10 +12,15 @@ import { ScheduleSlot, Slot } from "@/types/type";
 import { scheduleStatuses } from "@/lib/utils";
 import { useState } from "react";
 import SlotPopup from "./slot-popup";
+import { SelectAppointmentFormFields } from "@/db/schema";
 
-type Props = { slots: Slot[] };
+type Props = {
+  slots: Slot[];
+  hospitalId: string;
+  appointmentFormFields: SelectAppointmentFormFields[];
+};
 
-const Scheduler = ({ slots }: Props) => {
+const Scheduler = ({ slots, hospitalId, appointmentFormFields }: Props) => {
   const dataSource = slots.map((slot, i) => ({
     Id: i,
     StartTime: new Date(slot.date.toLocaleDateString() + " " + slot.startTime),
@@ -79,6 +84,8 @@ const Scheduler = ({ slots }: Props) => {
           setOpen={setOpen}
           closeDialog={closeDialog}
           slot={slot}
+          hospitalId={hospitalId}
+          appointmentFormFields={appointmentFormFields}
         />
       )}
     </>

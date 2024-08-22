@@ -200,3 +200,30 @@ function timeToMinutes(time: string) {
   const [hours, mins] = time.split(":").map(Number);
   return hours * 60 + mins;
 }
+
+export const defaultFormFields = [
+  {
+    inputName: "Full Name",
+    inputType: "text" as InputTypes,
+    required: "yes",
+    placeholder: "",
+  },
+  {
+    inputName: "Email",
+    inputType: "email" as InputTypes,
+    required: "yes",
+    placeholder: "",
+  },
+  {
+    inputName: "Phone Number",
+    inputType: "phoneNumber" as InputTypes,
+    required: "yes",
+    placeholder: "",
+  },
+  {
+    inputName: "Appointment Note",
+    inputType: "textarea" as InputTypes,
+    required: "no",
+    placeholder: "",
+  },
+];

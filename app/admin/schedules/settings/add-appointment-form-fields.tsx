@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -139,11 +140,32 @@ const AddAppointmentFormFields = () => {
                       ))}
                     </SelectContent>
                   </Select>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {form.watch("inputType") === "select" && (
+              <FormField
+                control={form.control}
+                name="selectData"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select Data</FormLabel>
+                    <FormDescription>
+                      enter each item and separate them with a semicolon(;)
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="item 1; item 2; item 3; item 4"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
@@ -168,7 +190,6 @@ const AddAppointmentFormFields = () => {
                       ))}
                     </SelectContent>
                   </Select>
-
                   <FormMessage />
                 </FormItem>
               )}

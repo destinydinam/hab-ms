@@ -27,7 +27,7 @@ import { LibsqlError } from "@libsql/client";
 import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import ResetPasswordTemplate from "@/components/emails/reset-password-template";
 import { Resend } from "resend";
-import { urls } from "@/lib/utils";
+import { defaultFormFields, urls } from "@/lib/utils";
 import { InputTypes } from "@/types/type";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
@@ -321,30 +321,3 @@ export const authUser = async (id: string) => {
     .where(eq(usersTable.id, id));
   return userData || undefined;
 };
-
-const defaultFormFields = [
-  {
-    inputName: "Full Name",
-    inputType: "text" as InputTypes,
-    required: "yes",
-    placeholder: "",
-  },
-  {
-    inputName: "Email",
-    inputType: "email" as InputTypes,
-    required: "yes",
-    placeholder: "",
-  },
-  {
-    inputName: "Phone Number",
-    inputType: "phoneNumber" as InputTypes,
-    required: "yes",
-    placeholder: "",
-  },
-  {
-    inputName: "Appointment Note",
-    inputType: "textarea" as InputTypes,
-    required: "no",
-    placeholder: "",
-  },
-];

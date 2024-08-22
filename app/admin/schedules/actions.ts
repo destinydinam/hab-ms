@@ -101,8 +101,14 @@ export const createAppointmentFormFields = async (
       inputType: validatedFields.data.inputType as InputTypes,
       required: validatedFields.data.required,
       placeholder: validatedFields.data?.placeholder || "",
-      selectData: validatedFields.data.selectData,
-
+      selectData:
+        validatedFields.data.selectData &&
+        JSON.stringify(
+          validatedFields.data.selectData
+            .split(";")
+            .map((i) => i.trim())
+            .filter(Boolean)
+        ),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -163,6 +169,23 @@ export const getAppointmentFormFields = async () => {
     return { success: true, data: appointmentFormFields };
   } catch (error) {
     console.log("getAppointmentFormFields ~ error:", error);
+    return { success: false, message };
+  }
+};
+
+export const getAppointmentFormFieldsPublic = async (hospitalId: string) => {
+  try {
+    if (!hospitalId)
+      return { success: false, message: "no hospital Id provided" };
+
+    const appointmentFormFields = await db
+      .select()
+      .from(appointmentFormFieldsTable)
+      .where(eq(appointmentFormFieldsTable.hospitalId, hospitalId));
+
+    return { success: true, data: appointmentFormFields };
+  } catch (error) {
+    console.log("getAppointmentFormFieldsPublic ~ error:", error);
     return { success: false, message };
   }
 };

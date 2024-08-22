@@ -91,7 +91,10 @@ const SchedulerTab = (props: Props) => {
       const bufferTime = +(appointmentSettings.data.bufferTime || 0);
 
       availabilities.data.map((a) => {
-        if (days[activeDate.getDay()] === a.day) {
+        if (
+          data?.data?.find((d) => d.id === a.doctorId)?.status === "active" &&
+          days[activeDate.getDay()] === a.day
+        ) {
           const durationsCount = calculateDurations({
             startTime: a.startTime,
             endTime: a.endTime,

@@ -19,6 +19,7 @@ import {
   scheduleStatuses,
 } from "@/lib/utils";
 import {
+  SelectAppointmentFormFields,
   SelectAppointmentSettings,
   SelectDoctor,
   SelectOverride,
@@ -33,6 +34,7 @@ type Props = {
   availabilities: SelectWeeklyAvailabilities[];
   appointmentSettings: SelectAppointmentSettings;
   overrides: SelectOverride[];
+  appointmentFormFields: SelectAppointmentFormFields[];
 };
 
 const MAX_BOOKING_DAYS = 30;
@@ -43,6 +45,7 @@ const SchedulerSection = ({
   availabilities,
   doctors,
   overrides,
+  appointmentFormFields,
 }: Props) => {
   const doctorSpecialty = useDoctorSpecialty();
   const setDoctorSpecialty = useSetDoctorSpecialty();
@@ -55,7 +58,10 @@ const SchedulerSection = ({
     const bufferTime = +(appointmentSettings.bufferTime || 0);
 
     availabilities.map((a) => {
-      if (days[activeDate.getDay()] === a.day) {
+      if (
+        doctors.find((d) => d.id === a.doctorId)?.status === "active" &&
+        days[activeDate.getDay()] === a.day
+      ) {
         const durationsCount = calculateDurations({
           startTime: a.startTime,
           endTime: a.endTime,
@@ -153,7 +159,11 @@ const SchedulerSection = ({
         Select your slot from the available slots
       </small>
 
-      <Scheduler slots={slots} />
+      <Scheduler
+        slots={slots}
+        hospitalId={hospitalId}
+        appointmentFormFields={appointmentFormFields}
+      />
     </div>
   );
 };

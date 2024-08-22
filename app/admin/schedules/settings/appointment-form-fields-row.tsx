@@ -9,6 +9,7 @@ import { SelectAppointmentFormFields } from "@/db/schema";
 import { MoreHorizontal } from "lucide-react";
 import ViewMore from "./view-more ";
 import DeleteAppointmentFormFields from "./delete-appointment-form-fields";
+import { defaultFormFields } from "@/lib/utils";
 
 type Props = {
   index: number;
@@ -33,7 +34,11 @@ const AppointmentFormFieldsRow = ({ formField, index }: Props) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <ViewMore formField={formField} />
-            <DeleteAppointmentFormFields formField={formField} />
+            {!(
+              formField.inputName === defaultFormFields[0].inputName ||
+              formField.inputName === defaultFormFields[1].inputName ||
+              formField.inputName === defaultFormFields[2].inputName
+            ) && <DeleteAppointmentFormFields formField={formField} />}
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>

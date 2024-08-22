@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import AddAppointmentFormFields from "./add-appointment-form-fields";
 import CenterDivs from "@/components/ui/center-divs";
 import AppointmentFormFieldsRow from "./appointment-form-fields-row";
+import PreviewFormField from "./preview-form-fields";
 
 type Props = {};
 
@@ -87,10 +88,9 @@ const SettingsTab = (props: Props) => {
             Appointment Form
           </h2>
 
-          <Button variant="link" className="gap-2 text-green-600">
-            <Eye className="w-4 h-4" />
-            preview
-          </Button>
+          <PreviewFormField
+            appointmentFormFields={appointmentFormFields?.data || []}
+          />
         </div>
 
         <div className="bg-white p-2 md:px-6 md:py-4 rounded-lg mt-4 pt-4">

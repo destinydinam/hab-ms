@@ -1,4 +1,7 @@
-import { getAppointmentSettingsPublic } from "@/app/admin/schedules/actions";
+import {
+  getAppointmentFormFieldsPublic,
+  getAppointmentSettingsPublic,
+} from "@/app/admin/schedules/actions";
 import { authUser } from "@/app/auth/actions";
 import { Clock } from "lucide-react";
 import Image from "next/image";
@@ -34,6 +37,8 @@ const ScheduleAppointmentPage = async ({ params: { hospitalId } }: Props) => {
   const availabilities =
     await getWeeklyAvailabilitiesByHospitalIdPublic(hospitalId);
   const overrides = await getOverridesByHospitalIdPublic(hospitalId);
+  const appointmentFormFields =
+    await getAppointmentFormFieldsPublic(hospitalId);
 
   return (
     <div className="max-w-screen-2xl px-4 md:px-8">
@@ -69,6 +74,7 @@ const ScheduleAppointmentPage = async ({ params: { hospitalId } }: Props) => {
             availabilities={availabilities.data}
             overrides={overrides.data || []}
             hospitalId={hospitalId}
+            appointmentFormFields={appointmentFormFields?.data || []}
           />
         )}
     </div>
