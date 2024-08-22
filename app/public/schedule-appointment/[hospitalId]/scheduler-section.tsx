@@ -71,6 +71,13 @@ const SchedulerSection = ({
 
         let startTime = a.startTime;
 
+        if (
+          new Date() >
+          new Date(activeDate.toLocaleDateString() + " " + startTime)
+        ) {
+          return;
+        }
+
         let doctorOverrides: SelectOverride[] = [];
 
         if (overrides?.length)
@@ -130,6 +137,8 @@ const SchedulerSection = ({
       return slots;
     })();
   }
+
+  console.log("slots:", slots.length);
 
   return (
     <div>

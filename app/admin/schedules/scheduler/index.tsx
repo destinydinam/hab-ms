@@ -104,6 +104,13 @@ const SchedulerTab = (props: Props) => {
 
           let startTime = a.startTime;
 
+          if (
+            new Date() >
+            new Date(activeDate.toLocaleDateString() + " " + startTime)
+          ) {
+            return;
+          }
+
           let doctorOverrides: SelectOverride[] = [];
 
           if (overrides?.data?.length)
