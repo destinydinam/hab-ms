@@ -18,11 +18,17 @@ export type InputTypes =
 
 export type ScheduleForType = "doctors" | "doctor-types";
 
-export type ScheduleStatus = "all" | "booked" | "available" | "cancelled";
+export type ScheduleStatus =
+  | "all"
+  | "booked"
+  | "available"
+  | "cancelled"
+  | "missed"
+  | "completed";
 
 export interface Slot {
   date: Date;
-  doctor: string;
+  doctorId: string;
   startTime: string;
   endTime: string;
   status: ScheduleStatus;

@@ -22,6 +22,13 @@
       "when": 1724263296734,
       "tag": "0002_third_obadiah_stane",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1724366782501,
+      "tag": "0003_closed_clint_barton",
+      "breakpoints": true
     }
   ]
 }

@@ -42,6 +42,7 @@ type Props = {
   slot: ScheduleSlot;
   hospitalId: string;
   appointmentDuration: string;
+  doctorSpecialty: string;
   appointmentFormFields: SelectAppointmentFormFields[];
 };
 
@@ -53,6 +54,7 @@ const SlotPopup = ({
   hospitalId,
   appointmentFormFields,
   appointmentDuration,
+  doctorSpecialty,
 }: Props) => {
   const FormSchema = createZodSchema(appointmentFormFields);
 
@@ -68,6 +70,8 @@ const SlotPopup = ({
       const res = await bookSlot({
         hospitalId,
         slot,
+        duration: appointmentDuration,
+        doctorSpecialty,
         formInputs: Object.entries(values).map(([label, value]) => ({
           label,
           value,
@@ -75,11 +79,11 @@ const SlotPopup = ({
       });
 
       if (res.success) {
-        toast.success(res.message);
+        toast.success(res.message, { duration: 20000, closeButton: true });
 
         form.reset();
         closeDialog();
-      } else toast.error(res.message);
+      } else toast.error(res.message, { duration: 20000, closeButton: true });
     } catch (error) {
       toast.error("Something went wrong!");
     } finally {
@@ -159,7 +163,7 @@ const SlotPopup = ({
                                 (formField.selectData as string) || "[]"
                               ) as string[]
                             )?.map((item, i) => (
-                              <SelectItem key={i} value={item}>
+                              <SelectItem key={i} value={item || "."}>
                                 {item}
                               </SelectItem>
                             ))}

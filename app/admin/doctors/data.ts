@@ -1,11 +1,10 @@
 export const doctorTypes = [
-  "Others",
+  "General Practitioner", // Regular Doctor
   "Anesthesiologist",
   "Cardiologist",
   "Dermatologist",
   "Endocrinologist",
   "Gastroenterologist",
-  "General Practitioner (GP)",
   "Gynecologist",
   "Hematologist",
   "Infectious Disease Specialist",
@@ -24,4 +23,5 @@ export const doctorTypes = [
   "Rheumatologist",
   "Surgeon",
   "Urologist",
+  "Others",
 ];

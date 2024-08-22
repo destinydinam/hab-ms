@@ -176,6 +176,28 @@ export const appointmentFormFieldsTable = sqliteTable(
   }
 );
 
+export const slotsTable = sqliteTable("slots", {
+  id: text("id").notNull().primaryKey(),
+  hospitalId: text("hospital_id").notNull(),
+
+  date: integer("updated_at", { mode: "timestamp" }).notNull(),
+  doctorId: text("doctor_id").notNull(),
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
+  formEmail: text("form_email").notNull(),
+  formFullname: text("form_fullname").notNull(),
+  formInputs: text("form_inputs", { mode: "json" }).notNull(),
+
+  status: text("status", {
+    enum: ["booked", "available", "cancelled", "missed", "completed"],
+  }).notNull(),
+
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
 
@@ -205,3 +227,6 @@ export type InsertAppointmentFormFields =
   typeof appointmentFormFieldsTable.$inferInsert;
 export type SelectAppointmentFormFields =
   typeof appointmentFormFieldsTable.$inferSelect;
+
+export type InsertSlot = typeof slotsTable.$inferInsert;
+export type SelectSlot = typeof slotsTable.$inferSelect;

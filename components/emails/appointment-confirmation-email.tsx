@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Html,
   Head,
@@ -15,8 +14,9 @@ type Props = {
   hospitalLogo: string;
   hospitalName: string;
   hospitalLocation: string;
+  duration: string;
+  doctorSpecialty: string;
   formInputs: { label: string; value: string }[];
-  formEmail: string;
   formFullname: string;
   slot: ScheduleSlot;
 };
@@ -29,9 +29,10 @@ const AppointmentConfirmationEmail = ({
   hospitalLogo,
   hospitalName,
   hospitalLocation,
-  formEmail,
   formFullname,
   slot,
+  duration,
+  doctorSpecialty,
 }: Props) => (
   <Html>
     <Head />
@@ -55,6 +56,8 @@ const AppointmentConfirmationEmail = ({
         <Text>Date: {slot.StartTime.toDateString()}</Text>
         <Text>Time: {getTime(slot.StartTime)} </Text>
         <Text>Location: {hospitalLocation}</Text>
+        <Text>Service: {doctorSpecialty}</Text>
+        <Text>Duration: {duration}</Text>
 
         {formInputs.map((input, i) => (
           <Text key={i}>
@@ -62,18 +65,12 @@ const AppointmentConfirmationEmail = ({
           </Text>
         ))}
 
-        <Text>Provider: [Provider Name]</Text>
-        <Text>Service: [Service/Procedure]</Text>
-        <Text>Duration: [Appointment Duration]</Text>
-
         <Hr style={hr} />
 
         <Heading style={subheading}>Before your appointment:</Heading>
-        <Text>Please complete the enclosed patient registration form.</Text>
+        {/* <Text>Please complete the enclosed patient registration form.</Text> */}
         <Text>Bring your ID and insurance card.</Text>
-        <Text>
-          Arrive 15 minutes early to allow time for check-in and paperwork.
-        </Text>
+        <Text>Arrive 10 minutes early to allow time for check-in.</Text>
 
         <Text>
           If you need to cancel or reschedule, please call us at [Clinic Phone
@@ -86,11 +83,7 @@ const AppointmentConfirmationEmail = ({
         </Text>
 
         <Text>Sincerely,</Text>
-        <Text>[Your Name]</Text>
-        <Text>[Your Title]</Text>
-        <Text>[Your Email Address]</Text>
-        <Text>[Your Phone Number]</Text>
-        <Text>[Your Clinic Name]</Text>
+        <Text>{hospitalName}</Text>
       </Container>
     </Body>
   </Html>

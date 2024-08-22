@@ -81,7 +81,7 @@ const SchedulerSection = ({
 
           const newSlot = {
             date: activeDate,
-            doctor: a.doctorId,
+            doctorId: a.doctorId,
             startTime,
             endTime,
             status: scheduleStatuses.find(
@@ -119,10 +119,10 @@ const SchedulerSection = ({
 
   if (slots.length) {
     slots = (() => {
-      if (doctorSpecialty && doctorSpecialty !== "All") {
+      if (doctorSpecialty) {
         slots = slots.filter(
           (item) =>
-            doctors.find((d) => d.id === item.doctor)?.doctorType ===
+            doctors.find((d) => d.id === item.doctorId)?.doctorType ===
             doctorSpecialty
         );
       } else slots = slots;
@@ -142,10 +142,13 @@ const SchedulerSection = ({
             onValueChange={(e) => setDoctorSpecialty(e)}
           >
             <SelectTrigger className="w-full md:w-[150px] h-8">
-              <SelectValue placeholder="Select a type" />
+              <SelectValue
+                className="text-red-600"
+                placeholder="Select a type"
+              />
             </SelectTrigger>
             <SelectContent>
-              {["All", ...doctorTypes].map((doctoryType, i) => (
+              {doctorTypes.map((doctoryType, i) => (
                 <SelectItem key={i} value={doctoryType}>
                   {doctoryType}
                 </SelectItem>
@@ -164,6 +167,7 @@ const SchedulerSection = ({
         hospitalId={hospitalId}
         appointmentDuration={appointmentSettings.duration}
         appointmentFormFields={appointmentFormFields}
+        doctorSpecialty={doctorSpecialty}
       />
 
       <br />

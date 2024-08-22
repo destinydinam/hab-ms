@@ -1,3 +1,4 @@
+import { doctorTypes } from "@/app/admin/doctors/data";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -9,7 +10,7 @@ interface State {
 export const useStore = create<State>()(
   persist(
     (set) => ({
-      doctorSpecialty: "",
+      doctorSpecialty: doctorTypes[0],
       setDoctorSpecialty: (doctorSpecialty) => set({ doctorSpecialty }),
     }),
     { name: "hab-ms-public" }

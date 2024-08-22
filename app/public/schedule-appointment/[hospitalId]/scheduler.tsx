@@ -19,6 +19,7 @@ type Props = {
   hospitalId: string;
   appointmentFormFields: SelectAppointmentFormFields[];
   appointmentDuration: string;
+  doctorSpecialty: string;
 };
 
 const Scheduler = ({
@@ -26,6 +27,7 @@ const Scheduler = ({
   hospitalId,
   appointmentFormFields,
   appointmentDuration,
+  doctorSpecialty,
 }: Props) => {
   const dataSource = slots.map((slot, i) => ({
     Id: i,
@@ -93,6 +95,7 @@ const Scheduler = ({
           hospitalId={hospitalId}
           appointmentDuration={appointmentDuration}
           appointmentFormFields={appointmentFormFields}
+          doctorSpecialty={doctorSpecialty}
         />
       )}
     </>

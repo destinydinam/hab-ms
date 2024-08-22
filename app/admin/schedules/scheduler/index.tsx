@@ -116,7 +116,7 @@ const SchedulerTab = (props: Props) => {
 
             const newSlot = {
               date: activeDate,
-              doctor: a.doctorId,
+              doctorId: a.doctorId,
               startTime,
               endTime,
               status: scheduleStatuses.find(
@@ -159,10 +159,10 @@ const SchedulerTab = (props: Props) => {
         if (scheduleForType === "doctor-types")
           slots = slots.filter(
             (item) =>
-              data?.data.find((d) => d.id === item.doctor)?.doctorType ===
+              data?.data.find((d) => d.id === item.doctorId)?.doctorType ===
               scheduleFor
           );
-        else slots = slots.filter((item) => item.doctor === scheduleFor);
+        else slots = slots.filter((item) => item.doctorId === scheduleFor);
       }
 
       if (scheduleStatus && scheduleStatus !== "all") {

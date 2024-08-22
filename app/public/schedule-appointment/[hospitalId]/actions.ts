@@ -2,8 +2,11 @@
 
 import { authUser } from "@/app/auth/actions";
 import AppointmentConfirmationEmail from "@/components/emails/appointment-confirmation-email";
+import { db } from "@/db";
+import { InsertSlot, slotsTable } from "@/db/schema";
 import { urls } from "@/lib/utils";
 import { ScheduleSlot } from "@/types/type";
+import { generateId } from "lucia";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 
@@ -15,10 +18,14 @@ export const bookSlot = async ({
   formInputs,
   slot,
   hospitalId,
+  duration,
+  doctorSpecialty,
 }: {
   formInputs: { label: string; value: string }[];
   slot: ScheduleSlot;
   hospitalId: string;
+  duration: string;
+  doctorSpecialty: string;
 }) => {
   const errorMsg =
     "Failed to send email. Please contact hospital to report this issue.";
@@ -32,6 +39,25 @@ export const bookSlot = async ({
 
     if (!hospital) return { success: false, message: "no hospital found" };
 
+    const insertSlot: InsertSlot = {
+      id: generateId(15),
+      hospitalId,
+
+      date: slot.date,
+      doctorId: slot.doctorId,
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      status: "booked",
+      formEmail,
+      formFullname,
+      formInputs: JSON.stringify(formInputs),
+
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    };
+
+    await db.insert(slotsTable).values(insertSlot);
+
     const { data, error } = await resend.emails.send({
       from: `${hospital.hospitalName} <${SENDER_EMAIL}>`,
       to: [SENDER_EMAIL, hospital.email, formEmail],
@@ -41,9 +67,10 @@ export const bookSlot = async ({
         hospitalLogo: hospital.hospitalLogo || "",
         hospitalName: hospital.hospitalName,
         hospitalLocation: hospital.address,
-        formEmail,
         formFullname,
         slot,
+        duration,
+        doctorSpecialty,
       }),
     });
 
@@ -62,6 +89,10 @@ export const bookSlot = async ({
       };
     } else return { success: false, message: errorMsg };
   } catch (error) {
-    return { success: false, message: errorMsg };
+    return {
+      success: false,
+      message:
+        "An error occured booking the slot, please contact hospital asap or try again later.",
+    };
   }
 };
