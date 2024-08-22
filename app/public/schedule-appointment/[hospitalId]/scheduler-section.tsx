@@ -162,8 +162,12 @@ const SchedulerSection = ({
       <Scheduler
         slots={slots}
         hospitalId={hospitalId}
+        appointmentDuration={appointmentSettings.duration}
         appointmentFormFields={appointmentFormFields}
       />
+
+      <br />
+      <br />
     </div>
   );
 };

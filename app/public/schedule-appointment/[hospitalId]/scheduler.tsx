@@ -18,9 +18,15 @@ type Props = {
   slots: Slot[];
   hospitalId: string;
   appointmentFormFields: SelectAppointmentFormFields[];
+  appointmentDuration: string;
 };
 
-const Scheduler = ({ slots, hospitalId, appointmentFormFields }: Props) => {
+const Scheduler = ({
+  slots,
+  hospitalId,
+  appointmentFormFields,
+  appointmentDuration,
+}: Props) => {
   const dataSource = slots.map((slot, i) => ({
     Id: i,
     StartTime: new Date(slot.date.toLocaleDateString() + " " + slot.startTime),
@@ -85,6 +91,7 @@ const Scheduler = ({ slots, hospitalId, appointmentFormFields }: Props) => {
           closeDialog={closeDialog}
           slot={slot}
           hospitalId={hospitalId}
+          appointmentDuration={appointmentDuration}
           appointmentFormFields={appointmentFormFields}
         />
       )}

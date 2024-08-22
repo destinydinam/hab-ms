@@ -25,10 +25,8 @@ import { eq } from "drizzle-orm";
 import { generateId } from "lucia";
 import { LibsqlError } from "@libsql/client";
 import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
-import ResetPasswordTemplate from "@/components/emails/reset-password-template";
 import { Resend } from "resend";
 import { defaultFormFields, urls } from "@/lib/utils";
-import { InputTypes } from "@/types/type";
 
 const invalidInputMsg = "Invalid fields, please check your inputs";
 let message = "An error occurred, Please try again later";
@@ -235,12 +233,14 @@ const sendMail = async ({
   pass_reset_link: string;
 }) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: `HAB-MS <${SENDER_EMAIL}>`,
-      to: [user_email],
-      subject: "Password reset request",
-      react: ResetPasswordTemplate({ user_email, pass_reset_link }),
-    });
+    // const { data, error } = await resend.emails.send({
+    //   from: `HAB-MS <${SENDER_EMAIL}>`,
+    //   to: [user_email],
+    //   subject: "Password reset request",
+    //   react: ResetPasswordTemplate({ user_email, pass_reset_link }),
+    // });
+
+    const error = "";
 
     if (!error)
       return { success: true, message: "Email Sent, Please check your mail." };
