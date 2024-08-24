@@ -39,7 +39,7 @@ const Scheduler = ({ slots }: Props) => {
         height="550px"
         currentView="Week"
         selectedDate={
-          dataSource[0].StartTime > new Date()
+          dataSource[0]?.StartTime > new Date()
             ? dataSource[0].StartTime
             : new Date()
         }

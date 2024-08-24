@@ -14,6 +14,8 @@ export const usersTable = sqliteTable("users", {
   phoneNumber: text("phoneNumber").notNull(),
   hashedPassword: text("hashed_password").notNull(),
   hospitalLogo: text("hospital_logo"),
+  isVerified: text("is_verified"),
+
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

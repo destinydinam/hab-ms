@@ -51,6 +51,7 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       hashedPassword: hashedPassword,
+      isVerified: "no",
     };
 
     const [existingUser] = await db
@@ -97,7 +98,12 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
       sessionCookie.attributes
     );
 
-    return { success: true, message: "Account Created Successfully" };
+    return {
+      success: true,
+      message: `Account Created Successfully.
+      Your account is undergoing verification,
+      We will send you a confirmation email in the next working 5 Hours.`,
+    };
   } catch (error) {
     console.log("createUser ~ error:", error);
 
