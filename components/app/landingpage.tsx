@@ -106,7 +106,10 @@ const Landingpage = () => {
                   patient satisfaction - all in one platform.
                 </p>
               </div>
-              <Link href="https://hab-ms.matchmatchapi.com/auth/signup">
+              <Link
+                target="_blank"
+                href="https://hab-ms.matchmatchapi.com/auth/signup"
+              >
                 <Button className="bg-white text-[#9b045c] hover:bg-gray-100">
                   Sign Up
                 </Button>
@@ -210,7 +213,10 @@ const Landingpage = () => {
               </li>
             </ul>
             <div className="text-center">
-              <Link href="https://hab-ms.matchmatchapi.com/auth/signup">
+              <Link
+                target="_blank"
+                href="https://hab-ms.matchmatchapi.com/auth/signup"
+              >
                 <Button className="bg-[#9b045c] text-white hover:bg-[#7d0349]">
                   Sign Up Now
                 </Button>
@@ -285,7 +291,10 @@ const Landingpage = () => {
             <p className="text-xl text-gray-200 mb-8">
               Join HABMS today and experience the difference.
             </p>
-            <Link href="https://hab-ms.matchmatchapi.com/auth/signup">
+            <Link
+              target="_blank"
+              href="https://hab-ms.matchmatchapi.com/auth/signup"
+            >
               <Button className="bg-white text-[#9b045c] hover:bg-gray-100">
                 Sign Up Now
               </Button>
