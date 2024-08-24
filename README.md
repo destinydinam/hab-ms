@@ -16,7 +16,6 @@ Welcome to the Hospital Appointment Booking and Management System (HABMS), a web
 - [Project Structure](#project-structure)
 - [Environment Variables](#environment-variables)
 - [Scripts](#scripts)
-- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -79,8 +78,6 @@ The database is designed to manage all data related to patients, doctors, appoin
 - **appointmentSettingsTable**: Configures appointment-related settings.
 - **appointmentFormFieldsTable**: Defines custom fields for appointment forms.
 
-For more detailed information, refer to the [Entity-Relationship Diagram (ERD)](#) (link to ERD image or file).
-
 ## Installation
 
 ### Prerequisites
@@ -107,10 +104,14 @@ pnpm install
 Create a `.env.local` file in the root directory and add the following environment variables:
 
 ```
-NEXT_PUBLIC_APP_URL=<Your App URL>
-RESEND_API_KEY=<Your Resend API Key>
-RESEND_SENDER_EMAIL=<Your Resend Sender Email>
-DATABASE_URL=<Your Turso DB URL>
+NEXT_PUBLIC_APP_URL=<The base URL of the application.>
+RESEND_API_KEY=<API key for Resend to send emails.>
+RESEND_SENDER_EMAIL=<The sender email address for transactional emails.>
+TURSO_DATABASE_URL=<Connection string for Turso DB.>
+TURSO_AUTH_TOKEN=<Auth token for Turso DB.>
+DEFAULT_DURATION=<Default Duration for an appointment.>
+DEFAULT_BUFFER_TIME=<Default Buffer time for an appointment.>
+NEXT_PUBLIC_SYNCFUSION_KEY=<Api key for syncfusion.>
 ```
 
 ### Run the Application
@@ -147,7 +148,11 @@ Ensure that the following environment variables are set in your `.env.local` fil
 - `NEXT_PUBLIC_APP_URL`: The base URL of the application.
 - `RESEND_API_KEY`: API key for Resend to send emails.
 - `RESEND_SENDER_EMAIL`: The sender email address for transactional emails.
-- `DATABASE_URL`: Connection string for Turso DB.
+- `TURSO_DATABASE_URL`: Connection string for Turso DB.
+- `TURSO_AUTH_TOKEN`: Auth token for Turso DB.
+- `DEFAULT_DURATION`: Default Duration for an appointment.
+- `DEFAULT_BUFFER_TIME`: Default Buffer time for an appointment.
+- `NEXT_PUBLIC_SYNCFUSION_KEY`: Api key for syncfusion.
 
 ## Scripts
 
@@ -160,14 +165,6 @@ Ensure that the following environment variables are set in your `.env.local` fil
 - `pnpm migrations:drop`: Drop the database schema.
 - `pnpm migrations:push`: Push migrations to the database.
 - `pnpm migrations:introspect`: Introspect the database schema.
-
-## Testing
-
-Unit and integration tests can be added using a testing framework like Jest or Cypress. To run tests:
-
-```bash
-pnpm test
-```
 
 ## Contributing
 
