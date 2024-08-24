@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { ContactSchema } from "@/app/zod-schema";
+// import { ContactSchema } from "@/app/zod-schema";
 import { CornerDownRight } from "lucide-react";
 import { z } from "zod";
 import Logo from "@/public/logo/logo1.svg";
 import { Html, Body, Heading } from "@react-email/components";
 
-type Props = z.infer<typeof ContactSchema>;
+// type Props = z.infer<typeof ContactSchema>;
 
-const ContactUsTemplate = (props: Props) => {
+const ContactUsTemplate = (props: any) => {
   return (
     <Html lang="en">
       <Body style={main}>
