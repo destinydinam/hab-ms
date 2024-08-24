@@ -69,8 +69,8 @@ export const signUp = async (values: z.infer<typeof SignupSchema>) => {
     const appointmentSettings: InsertAppointmentSettings = {
       id: generateId(15),
       hospitalId: insertValues.id,
-      duration: process.env.DEFAULT_DURATION || "5",
-      bufferTime: process.env.DEFAULT_BUFFER_TIME || "2",
+      duration: process.env.DEFAULT_DURATION || "25",
+      bufferTime: process.env.DEFAULT_BUFFER_TIME || "5",
       paymentBeforeBooking: "yes",
       showDoctorName: "no",
       createdAt: new Date(),

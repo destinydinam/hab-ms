@@ -30,6 +30,7 @@ const Scheduler = ({ slots }: Props) => {
       </div>
     );
   };
+
   return (
     <>
       <ScheduleComponent
@@ -37,7 +38,11 @@ const Scheduler = ({ slots }: Props) => {
         width="100%"
         height="550px"
         currentView="Week"
-        selectedDate={new Date()}
+        selectedDate={
+          dataSource[0].StartTime > new Date()
+            ? dataSource[0].StartTime
+            : new Date()
+        }
         eventRendered={(args: EventRenderedArgs) => {
           args.element.style.background = args.data?.Color;
         }}
