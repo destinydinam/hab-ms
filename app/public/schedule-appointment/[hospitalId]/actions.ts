@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { InsertSlot, slotsTable } from "@/db/schema";
 import { urls } from "@/lib/utils";
 import { ScheduleSlot } from "@/types/type";
+import { and, eq, gte } from "drizzle-orm";
 import { generateId } from "lucia";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
@@ -94,5 +95,27 @@ export const bookSlot = async ({
       message:
         "An error occured booking the slot, please contact hospital asap or try again later.",
     };
+  }
+};
+
+export const getAppointmentSlotsPublic = async (hospitalId: string) => {
+  try {
+    if (!hospitalId)
+      return { success: false, message: "no hospital Id provided" };
+
+    const appointmentSlots = await db
+      .select()
+      .from(slotsTable)
+      .where(
+        and(
+          eq(slotsTable.hospitalId, hospitalId),
+          gte(slotsTable.date, new Date())
+        )
+      );
+
+    return { success: true, data: appointmentSlots };
+  } catch (error) {
+    console.log("getAppointmentSlotsPublic ~ error:", error);
+    return { success: false, message: "An error occured" };
   }
 };

@@ -1,0 +1,1 @@
+ALTER TABLE `slots` ADD `date` integer;

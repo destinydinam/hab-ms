@@ -182,7 +182,7 @@ export const slotsTable = sqliteTable("slots", {
   id: text("id").notNull().primaryKey(),
   hospitalId: text("hospital_id").notNull(),
 
-  date: integer("updated_at", { mode: "timestamp" }).notNull(),
+  date: integer("date", { mode: "timestamp" }),
   doctorId: text("doctor_id").notNull(),
   startTime: text("start_time").notNull(),
   endTime: text("end_time").notNull(),

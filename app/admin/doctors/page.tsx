@@ -79,7 +79,7 @@ const DoctorsList = ({ doctors }: { doctors: SelectDoctor[] }) => {
                 Working Hours: {convertToAmPm(doctor.startTime)} -{" "}
                 {convertToAmPm(doctor.endTime)}
               </p>
-              <div className="flex items-center px-1 md:px-3 gap-10 justify-between">
+              <div className="flex items-center px-1 md:px-3 gap-2 w-full justify-between">
                 <p className="text-custom-primary">{doctor.doctorType}</p>
                 <p>Schedules: {"13"}</p>
               </div>

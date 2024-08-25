@@ -12,6 +12,7 @@ import {
   getOverridesByHospitalIdPublic,
   getWeeklyAvailabilitiesByHospitalIdPublic,
 } from "@/app/admin/doctors/actions";
+import { getAppointmentSlotsPublic } from "./actions";
 
 type Props = { params: { hospitalId: string } };
 
@@ -39,6 +40,7 @@ const ScheduleAppointmentPage = async ({ params: { hospitalId } }: Props) => {
   const overrides = await getOverridesByHospitalIdPublic(hospitalId);
   const appointmentFormFields =
     await getAppointmentFormFieldsPublic(hospitalId);
+  const appointmentSlots = await getAppointmentSlotsPublic(hospitalId);
 
   return (
     <div className="max-w-screen-2xl px-4 md:px-8">
@@ -75,6 +77,7 @@ const ScheduleAppointmentPage = async ({ params: { hospitalId } }: Props) => {
             overrides={overrides.data || []}
             hospitalId={hospitalId}
             appointmentFormFields={appointmentFormFields?.data || []}
+            appointmentSlots={appointmentSlots?.data || []}
           />
         )}
     </div>

@@ -21,6 +21,7 @@ import {
   certificationsTable,
   doctorsTable,
   overridesTable,
+  slotsTable,
   weeklyAvailabilitiesTable,
   workExperienceTable,
 } from "@/db/schema";
@@ -588,6 +589,25 @@ export const deleteWorkExperience = async ({
     return { success: true, message: "Work Experience deleted successfully" };
   } catch (error) {
     console.log("error:", error);
+    return { success: false, message };
+  }
+};
+
+// ======================= Appointment =======================
+
+export const getAppointments = async (doctorId: string) => {
+  try {
+    const { user } = await validateRequest();
+    if (!user?.id) return { success: false, message: "Unauthenticated" };
+
+    const doctors = await db
+      .select()
+      .from(slotsTable)
+      .where(eq(slotsTable.doctorId, doctorId));
+
+    return { success: true, data: doctors };
+  } catch (error) {
+    console.log("getAppointments ~ error:", error);
     return { success: false, message };
   }
 };

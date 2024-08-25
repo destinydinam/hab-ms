@@ -9,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { queryKeys } from "@/lib/utils";
+import { convertToAmPm, queryKeys } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { getAppointments } from "../../actions";
 
 type Props = {};
 
@@ -21,7 +22,7 @@ const AppointmentsPage = (props: Props) => {
 
   const { data, isLoading } = useQuery({
     queryKey: [queryKeys.appointments],
-    queryFn: async () => [],
+    queryFn: async () => getAppointments(doctorId as string),
   });
 
   return (
@@ -36,7 +37,7 @@ const AppointmentsPage = (props: Props) => {
               <TableHead className="whitespace-nowrap">Date</TableHead>
               <TableHead className="whitespace-nowrap">Period</TableHead>
               <TableHead className="whitespace-nowrap">Status</TableHead>
-              <TableHead className="whitespace-nowrap">End Date</TableHead>
+              <TableHead className="whitespace-nowrap"></TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -49,8 +50,22 @@ const AppointmentsPage = (props: Props) => {
                   <Skeleton className="w-full bg-gray-300 h-10 mt-1" />
                 </TableCell>
               </TableRow>
-            ) : data?.length ? (
-              data?.map((_, index) => <div key={index}></div>)
+            ) : data?.data?.length ? (
+              data.data?.map((slot, i) => (
+                <TableRow key={i}>
+                  <TableCell>{i + 1}</TableCell>
+                  <TableCell>{slot.date.toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {convertToAmPm(slot.startTime)} -{" "}
+                    {convertToAmPm(slot.endTime)}
+                  </TableCell>
+                  <TableCell>{slot.status}</TableCell>
+                  {/* <TableCell>{}</TableCell> */}
+                  {/* <TableCell>{certification.dateIssued}</TableCell>
+              <TableCell>{certification.expiryDate}</TableCell>
+              <TableCell>{certification.certificateFile}</TableCell> */}
+                </TableRow>
+              ))
             ) : (
               <TableRow>
                 <TableCell colSpan={6} className="h-10 text-center">

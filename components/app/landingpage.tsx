@@ -106,7 +106,7 @@ const Landingpage = () => {
               </div>
               <Link
                 target="_blank"
-                href="https://hab-ms.matchmatchapi.com/auth/signup"
+                href={process.env.NEXT_PUBLIC_APP_URL + "/auth/signup"}
               >
                 <Button className="bg-white text-[#9b045c] hover:bg-gray-100">
                   Sign Up
@@ -213,7 +213,7 @@ const Landingpage = () => {
             <div className="text-center">
               <Link
                 target="_blank"
-                href="https://hab-ms.matchmatchapi.com/auth/signup"
+                href={process.env.NEXT_PUBLIC_APP_URL + "/auth/signup"}
               >
                 <Button className="bg-[#9b045c] text-white hover:bg-[#7d0349]">
                   Sign Up Now
@@ -291,7 +291,7 @@ const Landingpage = () => {
             </p>
             <Link
               target="_blank"
-              href="https://hab-ms.matchmatchapi.com/auth/signup"
+              href={process.env.NEXT_PUBLIC_APP_URL + "/auth/signup"}
             >
               <Button className="bg-white text-[#9b045c] hover:bg-gray-100">
                 Sign Up Now

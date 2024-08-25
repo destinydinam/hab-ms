@@ -8,9 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Scheduler from "./scheduler";
-
 import { Slot } from "@/types/type";
-
 import {
   addMinutes,
   calculateDurations,
@@ -23,6 +21,7 @@ import {
   SelectAppointmentSettings,
   SelectDoctor,
   SelectOverride,
+  SelectSlot,
   SelectWeeklyAvailabilities,
 } from "@/db/schema";
 import { useDoctorSpecialty, useSetDoctorSpecialty } from "./store";
@@ -35,6 +34,7 @@ type Props = {
   appointmentSettings: SelectAppointmentSettings;
   overrides: SelectOverride[];
   appointmentFormFields: SelectAppointmentFormFields[];
+  appointmentSlots: SelectSlot[];
 };
 
 const MAX_BOOKING_DAYS = 30;
@@ -46,6 +46,7 @@ const SchedulerSection = ({
   doctors,
   overrides,
   appointmentFormFields,
+  appointmentSlots = [],
 }: Props) => {
   const doctorSpecialty = useDoctorSpecialty();
   const setDoctorSpecialty = useSetDoctorSpecialty();
@@ -86,38 +87,60 @@ const SchedulerSection = ({
         for (let j = 0; j < durationsCount; j++) {
           const endTime = addMinutes(startTime, duration);
 
-          const newSlot = {
-            date: activeDate,
-            doctorId: a.doctorId,
-            startTime,
-            endTime,
-            status: scheduleStatuses.find(
-              (status) => status.value === "available"
-            )?.value!,
-          };
+          if (
+            !appointmentSlots.find(
+              (slot) =>
+                slot.date?.toLocaleDateString() ===
+                  activeDate.toLocaleDateString() &&
+                slot.doctorId === a.doctorId &&
+                !checkOverlap({
+                  overrideStart: new Date(
+                    slot.date?.toLocaleDateString() + " " + slot.startTime
+                  ),
+                  overrideEnd: new Date(
+                    slot.date?.toLocaleDateString() + " " + slot.endTime
+                  ),
+                  newStart: new Date(
+                    activeDate.toLocaleDateString() + " " + startTime
+                  ),
+                  newEnd: new Date(
+                    activeDate.toLocaleDateString() + " " + endTime
+                  ),
+                }).success
+            )
+          ) {
+            const newSlot = {
+              date: activeDate,
+              doctorId: a.doctorId,
+              startTime,
+              endTime,
+              status: scheduleStatuses.find(
+                (status) => status.value === "available"
+              )?.value!,
+            };
 
-          let isOverride = false;
+            let isOverride = false;
 
-          doctorOverrides.map((o) => {
-            const response = checkOverlap({
-              overrideStart: new Date(o.startDate + " " + o.startTime),
-              overrideEnd: new Date(o.endDate + " " + o.endTime),
-              newStart: new Date(
-                newSlot.date.toLocaleDateString() + " " + newSlot.startTime
-              ),
-              newEnd: new Date(
-                newSlot.date.toLocaleDateString() + " " + newSlot.endTime
-              ),
+            doctorOverrides.map((o) => {
+              const response = checkOverlap({
+                overrideStart: new Date(o.startDate + " " + o.startTime),
+                overrideEnd: new Date(o.endDate + " " + o.endTime),
+                newStart: new Date(
+                  newSlot.date.toLocaleDateString() + " " + newSlot.startTime
+                ),
+                newEnd: new Date(
+                  newSlot.date.toLocaleDateString() + " " + newSlot.endTime
+                ),
+              });
+
+              if (!response.success) {
+                isOverride = true;
+                return;
+              }
             });
 
-            if (!response.success) {
-              isOverride = true;
-              return;
-            }
-          });
-
-          if (!isOverride) slots.push(newSlot);
-
+            if (!isOverride) slots.push(newSlot);
+          }
           startTime = addMinutes(endTime, bufferTime);
         }
       }
@@ -137,8 +160,6 @@ const SchedulerSection = ({
       return slots;
     })();
   }
-
-  console.log("slots:", slots.length);
 
   return (
     <div>

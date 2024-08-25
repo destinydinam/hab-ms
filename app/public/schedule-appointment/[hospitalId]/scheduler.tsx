@@ -45,7 +45,6 @@ const Scheduler = ({
   const closeDialog = () => setOpen(false);
 
   const handleEventClick = (args: any) => {
-    console.log("handleEventClick ~ args:", args);
     args.cancel = true;
     setOpen(true);
     setSlot(args.event);
