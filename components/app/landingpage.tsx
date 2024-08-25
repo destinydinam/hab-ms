@@ -91,9 +91,7 @@ const Landingpage = () => {
               opacity: 1,
               y: 0,
             }}
-            transition={{
-              duration: 0.6,
-            }}
+            transition={{ duration: 0.6 }}
             className="z-50 flex flex-col justify-center items-center"
           >
             <div className="flex flex-col items-center space-y-10 md:space-y-4 text-center">

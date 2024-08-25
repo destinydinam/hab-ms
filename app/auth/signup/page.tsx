@@ -12,9 +12,11 @@ const SignupPage = async () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          Sign Up For Your Hospital
+        </CardTitle>
         <CardDescription>
-          Enter your details to create an account.
+          Enter Hospital details to create an account.
         </CardDescription>
       </CardHeader>
       <SignupForm />
